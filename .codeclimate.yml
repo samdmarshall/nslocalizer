@@ -1,0 +1,38 @@
+engines:
+  radon:
+    enabled: true
+
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - python
+    exclude_fingerprints:
+    - b8f2a1e43a0b3b9b0c72906c1ce70b38
+    - 51a67d07281197dbafb1a27851a49827
+    - b66575f68c2aa9802aee58689faafdab
+    - 6d61aab6b7baaa5ba2544cf9dcd32fd3
+    - fb54f72bab4fb1aa79dda0de0ae78c0e
+    - f6ad549600e30311a4259411ec8758d3
+  FIXME:
+    enabled: true
+
+ratings:
+  paths:
+  - pyconfig/
+
+exclude_paths:
+- examples/
+- tests/
+- tools/
+- "*.md"
+- "*.yml"
+- "*.ini"
+- Makefile
+- Dangerfile
+- Gemfile
+- LICENSE
+- pyc.py
+- contributing/
+- docs/
+- setup.py
