@@ -160,7 +160,7 @@ install-tools: check
 
 # --- 
 
-removeall = $(RM) -rdf
+removeall = $(RM) -rRf
 cleanlocation = @$(FIND) $1 $2 -print0 | $(XARGS) -0 $(removeall)
 
 clean: check
