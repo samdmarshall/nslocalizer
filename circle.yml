@@ -1,0 +1,14 @@
+machine:
+  python:
+    version: 2.7.10
+  ruby:
+    version: 2.2.4
+
+dependencies:
+  override:
+    - make install-deps
+    - pyenv local 2.7.10 3.5.0
+
+test:
+  override:
+    - make ci

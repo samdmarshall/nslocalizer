@@ -1,0 +1,5 @@
+coverage >= 4
+tox >= 2.3.1
+tox_pyenv >= 1.0.3
+codeclimate-test-reporter >= 0.1.2
+pylint >= 1.6.1

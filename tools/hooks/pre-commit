@@ -1,0 +1,10 @@
+#!/bin/sh
+git_path=`git rev-parse --show-toplevel`
+pushd $git_path
+	
+commit_hash=`git rev-parse --short HEAD`
+remote_origin=`git ls-remote --get-url`
+echo "remote_origin = '$remote_origin'\ncommit_hash = '$commit_hash'" > ./pyconfig/version_info.py
+git add ./pyconfig/version_info.py
+
+popd
