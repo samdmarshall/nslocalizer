@@ -40,6 +40,11 @@ setup(
     license = 'BSD 3-Clause',
     packages = [ 
         'pylocalizer',
+        'pylocalizer/Helpers',
+        'pylocalizer/pyXcode',
+        'pylocalizer/pyXcode/pbProj',
+        'pylocalizer/pyXcode/pbProj/pbPlist',
+        'pylocalizer/pyXcode/pyxcwsdata'
     ],
     entry_points = { 
         'console_scripts': [ 'pylocalizer = pylocalizer:main' ] 

@@ -60,7 +60,6 @@ TPUT_CMD := tput
 TR_CMD := tr
 PYLINT_CMD := pylint
 
-PYPARSING := pyparsing
 TOX_PYENV := tox-pyenv
 
 # invoke the specific executable command
