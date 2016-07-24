@@ -30,4 +30,4 @@
 
 import sys
 import os
-import pbPlist
+from . import pbPlist

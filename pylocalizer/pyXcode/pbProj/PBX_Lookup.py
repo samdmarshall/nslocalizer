@@ -28,88 +28,85 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from .PBX_Constants import *
-
-from .PBXItem import *
-
-from .PBXAggregateTarget import *
-from .PBXAppleScriptBuildPhase import *
-from .PBXApplicationReference import *
-from .PBXApplicationTarget import *
-from .PBXBuildFile import *
-from .PBXBuildRule import *
-from .PBXBundleReference import *
-from .PBXBundleTarget import *
-from .PBXContainerItemProxy import *
-from .PBXCopyFilesBuildPhase import *
-from .PBXExecutableFileReference import *
-from .PBXFileReference import *
-from .PBXFrameworkReference import *
-from .PBXFrameworksBuildPhase import *
-from .PBXFrameworkTarget import *
-from .PBXGroup import *
-from .PBXHeadersBuildPhase import *
-from .PBXJavaArchiveBuildPhase import *
-from .PBXLegacyTarget import *
-from .PBXLibraryReference import *
-from .PBXLibraryTarget import *
-from .PBXNativeTarget import *
-from .PBXProject import *
-from .PBXReferenceProxy import *
-from .PBXResourcesBuildPhase import *
-from .PBXRezBuildPhase import *
-from .PBXShellScriptBuildPhase import *
-from .PBXSourcesBuildPhase import *
-from .PBXStandAloneTarget import *
-from .PBXTargetDependency import *
-from .PBXToolTarget import *
-from .PBXVariantGroup import *
-from .PBXZipArchiveReference import *
-from .XCBuildConfiguration import *
-from .XCConfigurationList import *
+from . import PBX_Constants
+from . import PBXItem
+from . import PBXAggregateTarget
+from . import PBXAppleScriptBuildPhase
+from . import PBXApplicationReference
+from . import PBXApplicationTarget
+from . import PBXBuildFile
+from . import PBXBuildRule
+from . import PBXBundleReference
+from . import PBXBundleTarget
+from . import PBXContainerItemProxy
+from . import PBXCopyFilesBuildPhase
+from . import PBXExecutableFileReference
+from . import PBXFileReference
+from . import PBXFrameworkReference
+from . import PBXFrameworksBuildPhase
+from . import PBXFrameworkTarget
+from . import PBXGroup
+from . import PBXHeadersBuildPhase
+from . import PBXJavaArchiveBuildPhase
+from . import PBXLegacyTarget
+from . import PBXLibraryReference
+from . import PBXLibraryTarget
+from . import PBXNativeTarget
+from . import PBXProject
+from . import PBXReferenceProxy
+from . import PBXResourcesBuildPhase
+from . import PBXRezBuildPhase
+from . import PBXShellScriptBuildPhase
+from . import PBXSourcesBuildPhase
+from . import PBXStandAloneTarget
+from . import PBXTargetDependency
+from . import PBXToolTarget
+from . import PBXVariantGroup
+from . import PBXZipArchiveReference
+from . import XCBuildConfiguration
+from . import XCConfigurationList
 
 PBX_TYPE_TABLE = {
-    'PBXAggregateTarget': PBXAggregateTarget,
-    'PBXAppleScriptBuildPhase': PBXAppleScriptBuildPhase,
-    'PBXApplicationReference': PBXApplicationReference,
-    'PBXApplicationTarget': PBXApplicationTarget,
-    'PBXBuildFile': PBXBuildFile,
-    'PBXBuildRule': PBXBuildRule,
-    'PBXBundleReference': PBXBundleReference,
-    'PBXBundleTarget': PBXBundleTarget,
-    'PBXContainerItemProxy': PBXContainerItemProxy,
-    'PBXCopyFilesBuildPhase': PBXCopyFilesBuildPhase,
-    'PBXExecutableFileReference': PBXExecutableFileReference,
-    'PBXFileReference': PBXFileReference,
-    'PBXFrameworkReference': PBXFrameworkReference,
-    'PBXFrameworksBuildPhase': PBXFrameworksBuildPhase,
-    'PBXFrameworkTarget': PBXFrameworkTarget,
-    'PBXGroup': PBXGroup,
-    'PBXHeadersBuildPhase': PBXHeadersBuildPhase,
-    'PBXJavaArchiveBuildPhase': PBXJavaArchiveBuildPhase,
-    'PBXLegacyTarget': PBXLegacyTarget,
-    'PBXLibraryReference': PBXLibraryReference,
-    'PBXLibraryTarget': PBXLibraryTarget,
-    'PBXNativeTarget': PBXNativeTarget,
-    'PBXProject': PBXProject,
-    'PBXReferenceProxy': PBXReferenceProxy,
-    'PBXResourcesBuildPhase': PBXResourcesBuildPhase,
-    'PBXRezBuildPhase': PBXRezBuildPhase,
-    'PBXShellScriptBuildPhase': PBXShellScriptBuildPhase,
-    'PBXSourcesBuildPhase': PBXSourcesBuildPhase,
-    'PBXStandAloneTarget': PBXStandAloneTarget,
-    'PBXTargetDependency': PBXTargetDependency,
-    'PBXToolTarget': PBXToolTarget,
-    'PBXVariantGroup': PBXVariantGroup,
-    'PBXZipArchiveReference': PBXZipArchiveReference,
-    'XCBuildConfiguration': XCBuildConfiguration,
-    'XCConfigurationList': XCConfigurationList,
+    'PBXAggregateTarget': PBXAggregateTarget.PBXAggregateTarget,
+    'PBXAppleScriptBuildPhase': PBXAppleScriptBuildPhase.PBXAppleScriptBuildPhase,
+    'PBXApplicationReference': PBXApplicationReference.PBXApplicationReference,
+    'PBXApplicationTarget': PBXApplicationTarget.PBXApplicationTarget,
+    'PBXBuildFile': PBXBuildFile.PBXBuildFile,
+    'PBXBuildRule': PBXBuildRule.PBXBuildRule,
+    'PBXBundleReference': PBXBundleReference.PBXBundleReference,
+    'PBXBundleTarget': PBXBundleTarget.PBXBundleTarget,
+    'PBXContainerItemProxy': PBXContainerItemProxy.PBXContainerItemProxy,
+    'PBXCopyFilesBuildPhase': PBXCopyFilesBuildPhase.PBXCopyFilesBuildPhase,
+    'PBXExecutableFileReference': PBXExecutableFileReference.PBXExecutableFileReference,
+    'PBXFileReference': PBXFileReference.PBXFileReference,
+    'PBXFrameworkReference': PBXFrameworkReference.PBXFrameworkReference,
+    'PBXFrameworksBuildPhase': PBXFrameworksBuildPhase.PBXFrameworksBuildPhase,
+    'PBXFrameworkTarget': PBXFrameworkTarget.PBXFrameworkTarget,
+    'PBXGroup': PBXGroup.PBXGroup,
+    'PBXHeadersBuildPhase': PBXHeadersBuildPhase.PBXHeadersBuildPhase,
+    'PBXJavaArchiveBuildPhase': PBXJavaArchiveBuildPhase.PBXJavaArchiveBuildPhase,
+    'PBXLegacyTarget': PBXLegacyTarget.PBXLegacyTarget,
+    'PBXLibraryReference': PBXLibraryReference.PBXLibraryReference,
+    'PBXLibraryTarget': PBXLibraryTarget.PBXLibraryTarget,
+    'PBXNativeTarget': PBXNativeTarget.PBXNativeTarget,
+    'PBXProject': PBXProject.PBXProject,
+    'PBXReferenceProxy': PBXReferenceProxy.PBXReferenceProxy,
+    'PBXResourcesBuildPhase': PBXResourcesBuildPhase.PBXResourcesBuildPhase,
+    'PBXRezBuildPhase': PBXRezBuildPhase.PBXRezBuildPhase,
+    'PBXShellScriptBuildPhase': PBXShellScriptBuildPhase.PBXShellScriptBuildPhase,
+    'PBXSourcesBuildPhase': PBXSourcesBuildPhase.PBXSourcesBuildPhase,
+    'PBXStandAloneTarget': PBXStandAloneTarget.PBXStandAloneTarget,
+    'PBXTargetDependency': PBXTargetDependency.PBXTargetDependency,
+    'PBXToolTarget': PBXToolTarget.PBXToolTarget,
+    'PBXVariantGroup': PBXVariantGroup.PBXVariantGroup,
+    'PBXZipArchiveReference': PBXZipArchiveReference.PBXZipArchiveReference,
+    'XCBuildConfiguration': XCBuildConfiguration.XCBuildConfiguration,
+    'XCConfigurationList': XCConfigurationList.XCConfigurationList,
 }
 
 def PBX_Type_Resolver(identifier, dictionary):
-    global PBX_TYPE_TABLE
-    object_type = dictionary.get(kPBX_isa, None)
+    object_type = dictionary.get(PBX_Constants.kPBX_isa, None)
+    result = None
     if object_type:
-        return PBX_TYPE_TABLE.get(object_type, PBXItem)(identifier, dictionary)
-    else:
-        return None
+        result = PBX_TYPE_TABLE.get(object_type, PBXItem.PBXItem)(identifier, dictionary)
+    return result

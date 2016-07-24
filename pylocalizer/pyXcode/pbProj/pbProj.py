@@ -28,96 +28,96 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from pbPlist import pbPlist
-
-from .PBX_Constants import *
-from .PBX_Lookup import *
+from .pbPlist           import pbPlist
+from .                  import PBX_Constants
+from .                  import PBX_Lookup
 
 class PBXProj(object):
-    
+
     def __init__(self, file_path):
         plist = pbPlist.PBPlist(file_path)
-        
         contents = plist.root.nativeType()
-        
-        self.pbxObjects = set()
-        self.pbxIdentifier = None
-        self.pbxRootObject = None
-        self.pbxObjectVersion = 0
-        self.pbxArchiveVersion = 0
+
+        self.pbx_objects = set()
+        self.pbx_identifier = None
+        self.pbx_root_object = None
+        self.pbx_object_version = 0
+        self.pbx_archive_version = 0
         if contents != None:
             # get the path that we read from
-            self.pbxFilePath = plist.file_path
-            
+            self.pbx_file_path = plist.file_path
+
             # get the root object identifier
-            self.pbxIdentifier = contents.get(kPBX_rootObject, None)
-            
+            self.pbx_identifier = contents.get(PBX_Constants.kPBX_rootObject, None)
+
             # get the archive version number
-            archive_version = contents.get(kPBX_archiveVersion, None)
+            archive_version = contents.get(PBX_Constants.kPBX_archiveVersion, None)
             if archive_version:
-                self.pbxArchiveVersion = int(archive_version)
-            
+                self.pbx_archive_version = int(archive_version)
+
             # get the object version number
-            object_version = contents.get(kPBX_objectVersion, None)
+            object_version = contents.get(PBX_Constants.kPBX_objectVersion, None)
             if object_version:
-                self.pbxObjectVersion = int(object_version)
-            
+                self.pbx_object_version = int(object_version)
+
             # get the classes
-            self.pbxClasses = contents.get(kPBX_classes, None)
-            
+            self.pbx_classes = contents.get(PBX_Constants.kPBX_classes, None)
+
             # get all the objects
-            objects_dict = contents.get(kPBX_objects, None)
-            
+            objects_dict = contents.get(PBX_Constants.kPBX_objects, None)
+
             for entry in objects_dict.keys():
                 entry_dict = objects_dict.get(entry, None)
                 if entry_dict:
-                    object_item = PBX_Type_Resolver(entry, entry_dict)
-                    self.pbxObjects.add(object_item)
-            
-            self.pbxRootObject = self.objectForIdentifier(self.pbxIdentifier) 
-            self.pbxRootObject.resolveGraph(self)
-            
+                    object_item = PBX_Lookup.PBX_Type_Resolver(entry, entry_dict)
+                    self.pbx_objects.add(object_item)
+
+            self.pbx_root_object = self.objectForIdentifier(self.pbx_identifier)
+            self.pbx_root_object.resolveGraph(self)
+
     def __repr__(self):
+        rep_string = '<%s : INVALID OBJECT>' % (self.__class__.__name__)
         if self.isValid():
-            return '<%s : %s : %s>' % (self.__class__.__name__, self.pbxIdentifier,  self.pbxFilePath)
-        else:
-            return '<%s : INVALID OBJECT>' % (self.__class__.__name__)
-    
+            rep_string = '<%s : %s : %s>' % (self.__class__.__name__, self.pbx_identifier, self.pbx_file_path)
+        return rep_string
+
     def __attrs(self):
-        return (self.pbxIdentifier, self.pbxFilePath)
+        return (self.pbx_identifier, self.pbx_file_path)
 
     def __eq__(self, other):
-        return isinstance(other, PBXProj) and self.pbxIdentifier == other.pbxIdentifier and self.pbxFilePath == other.pbxFilePath
+        return isinstance(other, PBXProj) and self.pbx_identifier == other.pbx_identifier and self.pbx_file_path == other.pbx_file_path
 
     def __hash__(self):
         return hash(self.__attrs())
-    
+
     def isValid(self):
-        return self.pbxIdentifier != None
-        
+        return self.pbx_identifier is not None
+
     def objectForIdentifier(self, identifier):
         """
         Returns the parsed object from the project file for matching identifier, if no matching object is found it will return None.
         """
         result = None
         if self.isValid():
-            filter_results = filter(lambda obj: obj.identifier == identifier, self.pbxObjects)
-            if len(filter_results) > 0:
+            filter_results = list()
+            for pbx_object in self.pbx_objects:
+                if pbx_object.identifier == identifier:
+                    filter_results.append(pbx_object)
+            if len(filter_results):
                 result = filter_results[0]
         return result
-    
+
     def projects(self):
         """
-        This method returns a set of 'xcodeproj' objects that represents any referenced 
+        This method returns a set of 'xcodeproj' objects that represents any referenced
         xcodeproj files in this project.
         """
-        subprojects = set();
+        subprojects = set()
         if self.isValid():
             for path in self.__subproject_paths():
                 subprojects.add(path)
-        return subprojects;
-        
-    
+        return subprojects
+
     def __subproject_paths(self):
         """
         This method is for returning a list of paths to referenced project files in this
@@ -125,20 +125,20 @@ class PBXProj(object):
         """
         paths = list()
         if self.isValid():
-            project_references = self.pbxRootObject.get(kPBX_PROJECT_projectReferences, None)
+            project_references = self.pbx_root_object.get(PBX_Constants.kPBX_PROJECT_projectReferences, None)
             if project_references:
                 for project_dict in project_references:
-                    project_ref = project_dict[kPBX_PROJECTREF_ProjectRef]
+                    project_ref = project_dict[PBX_Constants.kPBX_PROJECTREF_ProjectRef]
                     paths.append(project_ref)
-        return paths;
-    
+        return paths
+
     def targets(self):
         """
         This method will return a list of build targets that are associated with this xcodeproj.
         """
         targets = list()
         if self.isValid():
-            target_list = self.pbxRootObject.get(kPBX_PROJECT_targets, None)
+            target_list = self.pbx_root_object.get(PBX_Constants.kPBX_PROJECT_targets, None)
             if target_list:
                 targets.extend(target_list)
         return targets

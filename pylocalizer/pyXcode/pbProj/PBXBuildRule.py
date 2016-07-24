@@ -28,7 +28,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from .PBXItem import *
+from .PBXItem import PBXItem
 
 class PBXBuildRule(PBXItem):
     def __init__(self, identifier, dictionary):

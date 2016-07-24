@@ -28,11 +28,12 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from .PBXItem import *
+from .        import PBX_Constants
+from .PBXItem import PBX_Base_Target
 
 class PBXNativeTarget(PBX_Base_Target):
     def __init__(self, identifier, dictionary):
         super(self.__class__, self).__init__(identifier, dictionary)
     def resolveGraph(self, project):
         super(self.__class__, self).resolveGraph(project)
-        self.resolveGraphNodesForArray(kPBX_TARGET_buildRules, project)
+        self.resolveGraphNodesForArray(PBX_Constants.kPBX_TARGET_buildRules, project)
