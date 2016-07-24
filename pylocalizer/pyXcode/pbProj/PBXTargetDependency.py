@@ -28,12 +28,13 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from .PBXItem import *
+from .        import PBX_Constants
+from .PBXItem import PBXItem
 
 class PBXTargetDependency(PBXItem):
     def __init__(self, identifier, dictionary):
         super(self.__class__, self).__init__(identifier, dictionary)
     def resolveGraph(self, project):
         super(self.__class__, self).resolveGraph(project)
-        self.resolveGraphNodeForKey(kPBX_TARGETDEP_target, project)
-        self.resolveGraphNodeForKey(kPBX_TARGETDEP_targetProxy, project)
+        self.resolveGraphNodeForKey(PBX_Constants.kPBX_TARGETDEP_target, project)
+        self.resolveGraphNodeForKey(PBX_Constants.kPBX_TARGETDEP_targetProxy, project)

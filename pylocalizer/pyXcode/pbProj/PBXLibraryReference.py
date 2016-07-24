@@ -28,7 +28,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from .PBXItem import *
+from .PBXItem import PBX_Base_Reference
 
 class PBXLibraryReference(PBX_Base_Reference):
     def __init__(self, identifier, dictionary):

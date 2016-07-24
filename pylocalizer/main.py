@@ -28,6 +28,8 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from __future__       import print_function
+
 import sys
 import argparse
 from .version         import __version__ as PYLOCALIZER_VERSION
@@ -57,7 +59,7 @@ def main(argv=sys.argv[1:]):
     parser.add_argument(
         '--target',
         metavar='<target name>',
-        help='specify the name target that is going to be analyzed',
+        help='specify the name of the target to analyze',
         action='store'
     )
     parser.add_argument(
