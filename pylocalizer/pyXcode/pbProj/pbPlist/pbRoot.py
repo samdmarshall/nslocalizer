@@ -29,23 +29,25 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import collections
-import pbItem
+from . import pbItem
 
 def StringCmp(obj1, obj2):
+    result = -1
     if obj1 > obj2:
-        return 1
+        result = 1
     elif obj1 == obj2:
-        return 0
-    else:
-        return -1
+        result = 0
+    return result
 
 def KeySorter(obj1, obj2):
+    result = 0
     if str(obj1) == 'isa':
-        return -1
+        result = -1
     elif str(obj2) == 'isa':
-        return 1
+        result = 1
     else:
-        return StringCmp(str(obj1), str(obj2))
+        result = StringCmp(str(obj1), str(obj2))
+    return result
 
 class pbRoot(collections.MutableMapping):
 
@@ -56,7 +58,7 @@ class pbRoot(collections.MutableMapping):
 
     def __internalKeyCheck(self, key):
         safe_key = key
-        if type(safe_key) == str:
+        if type(safe_key) is str:
             safe_key = pbItem.pbItemResolver(safe_key, 'qstring')
         return safe_key
 
@@ -78,22 +80,22 @@ class pbRoot(collections.MutableMapping):
 
     def __len__(self):
         return self.key_storage.__len__()
-    
+
     def __str__(self):
         return self.store.__str__()
-    
+
     def __contains__(self, item):
         return item in self.key_storage
-    
+
     def __getattr__(self, attrib):
         return getattr(self.store, attrib)
 
     def __keytransform__(self, key):
+        result = key
         if isinstance(key, pbItem.pbItem):
-            return key.value
-        else:
-            return key
-    
+            result = key.value
+        return result
+
     def sortedKeys(self):
         unsorted_keys = self.key_storage
         sorted_keys = sorted(unsorted_keys, cmp=KeySorter)
@@ -101,8 +103,7 @@ class pbRoot(collections.MutableMapping):
         if len(sorted_keys) > 0:
             all_dictionaries = all((type(self[key].value) is dict or type(self[key].value) is pbRoot) for key in unsorted_keys)
             if all_dictionaries:
-                can_sort = all(self[key].get('isa', None) != None for key in unsorted_keys)
+                can_sort = all(self[key].get('isa', None) is not None for key in unsorted_keys)
                 if can_sort:
                     sorted_keys = sorted(unsorted_keys, key=lambda k: str(self[k]['isa']))
         return (can_sort, sorted_keys)
-            

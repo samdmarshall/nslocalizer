@@ -30,7 +30,7 @@
 
 import string
 
-def ConvertNEXTSTEPToUnicode(hex_digit):
+def ConvertNEXTSTEPToUnicode(hex_digits):
     # taken from http://ftp.unicode.org/Public/MAPPINGS/VENDORS/NEXT/NEXTSTEP.TXT
     conversion = {
         "80":	"a0",	# NO-BREAK SPACE
@@ -62,7 +62,7 @@ def ConvertNEXTSTEPToUnicode(hex_digit):
         "9a":	"dc",	# LATIN CAPITAL LETTER U WITH DIAERESIS
         "9b":	"dd",	# LATIN CAPITAL LETTER Y WITH ACUTE
         "9c":	"de",	# LATIN CAPITAL LETTER THORN
-        "9d":	"b5",	# MICRO SIGN 
+        "9d":	"b5",	# MICRO SIGN
         "9e":	"d7",	# MULTIPLICATION SIGN
         "9f":	"f7",	# DIVISION SIGN
         "a0":	"a9",	# COPYRIGHT SIGN
@@ -224,17 +224,17 @@ def UnQuotifyString(string_data, start_index, end_index): # http://www.opensourc
                     unicode_numbers = extracted_string[starting_index:ending_index]
                     for number in unicode_numbers:
                         index += 1
-                        if IsHexNumber(number) == False:
+                        if IsHexNumber(number) is False:
                             message = 'Invalid unicode sequence on line '+str(LineNumberForIndex(string_data, start_index+index))
                             raise Exception(message)
                     formatted_string += unichr(int(unicode_numbers, 16))
-                if IsOctalNumber(next_char) == True: # https://twitter.com/Catfish_Man/status/658014170055507968
+                if IsOctalNumber(next_char) is True: # https://twitter.com/Catfish_Man/status/658014170055507968
                     starting_index = index
                     ending_index = starting_index + 1
                     for oct_index in range(3):
                         test_index = starting_index + oct_index
                         test_oct = extracted_string[test_index]
-                        if IsOctalNumber(test_oct) == True:
+                        if IsOctalNumber(test_oct) is True:
                             ending_index += 1
                     octal_numbers = extracted_string[starting_index:ending_index]
                     hex_number = int(octal_numbers, 8)
@@ -255,9 +255,9 @@ def LineNumberForIndex(string_data, current_index):
     line_number = 1
     index = 0
     string_length = len(string_data)
-    while ((index < current_index) and (index < string_length)):
+    while (index < current_index) and (index < string_length):
         current_char = string_data[index]
-        if IsNewline(current_char) == True:
+        if IsNewline(current_char) is True:
             line_number += 1
         index += 1
     return line_number
@@ -272,26 +272,32 @@ def IsValidUnquotedStringCharacter(character):
 
 def IsSpecialWhitespace(character):
     value = ord(character)
-    return (value >= 9 and value <= 13) # tab, newline, vt, form feed, carriage return
+    result = (value >= 9 and value <= 13) # tab, newline, vt, form feed, carriage return
+    return result
 
 def IsUnicodeSeparator(character):
     value = ord(character)
-    return (value == 8232 or value == 8233)
+    result = (value == 8232 or value == 8233)
+    return result
 
 def IsRegularWhitespace(character):
     value = ord(character)
-    return (value == 32 or IsUnicodeSeparator(character)) # space and Unicode line sep, para sep
+    result = (value == 32 or IsUnicodeSeparator(character)) # space and Unicode line sep, para sep
+    return result
 
 def IsDataFormattingWhitespace(character):
     value = ord(character)
-    return (IsNewline(character) or IsRegularWhitespace(character) or value == 9)
+    result = (IsNewline(character) or IsRegularWhitespace(character) or value == 9)
+    return result
 
 def IsNewline(character):
     value = ord(character)
-    return (value == 13 or value == 10)
+    result = (value == 13 or value == 10)
+    return result
 
 def IsEndOfLine(character):
-    return (IsNewline(character) or IsUnicodeSeparator(character))
+    result = (IsNewline(character) or IsUnicodeSeparator(character))
+    return result
 
 def IndexOfNextNonSpace(string_data, current_index):
     successful = False
@@ -300,10 +306,10 @@ def IndexOfNextNonSpace(string_data, current_index):
     annotation_string = ''
     while found_index < string_length:
         current_char = string_data[found_index]
-        if IsSpecialWhitespace(current_char) == True:
+        if IsSpecialWhitespace(current_char) is True:
             found_index += 1
             continue
-        if IsRegularWhitespace(current_char) == True:
+        if IsRegularWhitespace(current_char) is True:
             found_index += 1
             continue
         if current_char == '/':
@@ -319,10 +325,10 @@ def IndexOfNextNonSpace(string_data, current_index):
                     first_pass = True
                     while next_index < string_length:
                         test_char = string_data[next_index]
-                        if IsEndOfLine(test_char) == True:
+                        if IsEndOfLine(test_char) is True:
                             break
                         else:
-                            if first_pass != True:
+                            if first_pass is False:
                                 annotation_string += test_char
                             else:
                                 first_pass = False
@@ -350,4 +356,5 @@ def IndexOfNextNonSpace(string_data, current_index):
         else:
             successful = True
             break
-    return (successful, found_index, annotation_string)
+    result = (successful, found_index, annotation_string)
+    return result

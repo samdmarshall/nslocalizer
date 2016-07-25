@@ -28,7 +28,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import string_helper as StrParse
+from . import StrParse
 
 def PushIndent(indent_level):
     return indent_level + 1
@@ -38,7 +38,7 @@ def PopIndent(indent_level):
 
 def WriteIndent(level=0):
     output = ''
-    for index in range(level):
+    for _index in range(level):
         output += '\t'
     return output
 
@@ -49,7 +49,6 @@ def WriteNewline(level=0, indent=True):
     return output
 
 class pbItem(object):
-    
     def __init__(self, value=None, type_name=None, annotation=None):
         if value != None and type_name != None:
             self.value = value
@@ -61,27 +60,27 @@ class pbItem(object):
         else:
             message = 'The class "'+self.__class__.__name__+'" must be initialized with a non-None value'
             raise ValueError(message)
-    
+
     def __eq__(self, other):
+        is_equal = False
         if isinstance(other, pbItem):
             other = other.value
         if type(other) is type(self.value):
-            return self.value.__eq__(other)
-        else:
-            return False
-    
+            is_equal = self.value.__eq__(other)
+        return is_equal
+
     def __hash__(self):
         return self.value.__hash__()
-        
+
     def __repr__(self):
         return self.value.__repr__()
-    
+
     def __iter__(self):
         return self.value.__iter__()
-    
+
     def __getattr__(self, attrib):
         return self.value.__getattr__(attrib)
-   
+
     def __str__(self):
         return self.writeStringRep(0, False)[0]
 
@@ -90,26 +89,26 @@ class pbItem(object):
 
     def __setitem__(self, key, value):
         self.value.__setitem__(key, value)
-    
+
     def __len__(self):
         return self.value.__len__()
-    
+
     def __contains__(self, item):
         return self.value.__contains__(item)
-    
+
     def __get__(self, obj, objtype):
         return self.value.__get__(obj, objtype)
-    
+
     def writeStringRep(self, indent_level=0, pretty=True):
         return self.writeString(indent_level, pretty)
-    
-    def writeString(self, indent_level=0, pretty=True):
+
+    def writeString(self, indent_level=0, pretty=True): # pylint: disable=no-self-use,unused-variable
         message = 'This is a base class, it cannot write!'
         raise Exception(message)
-        
+
     def nativeType(self):
         return self.value
-        
+
     def writeAnnotation(self):
         output_string = ''
         if self.annotation != None and len(self.annotation) > 0:
@@ -123,27 +122,27 @@ class pbString(pbItem):
     def writeString(self, indent_level=0, pretty=True):
         string_string = ''
         string_string += self.value
-        if pretty == True:
+        if pretty is True:
             string_string += self.writeAnnotation()
         return (string_string, indent_level)
-    
+
 class pbQString(pbItem):
     def writeStringRep(self, indent_level=0, pretty=True):
         qstring_string = ''
         for character in self.value:
             qstring_string += StrParse.SanitizeCharacter(character)
         return (qstring_string, indent_level)
-    
+
     def writeString(self, indent_level=0, pretty=True):
         qstring_string = ''
         qstring_string += '"'
         string_rep, indent_level = self.writeStringRep(indent_level, pretty)
         qstring_string += string_rep
         qstring_string += '"'
-        if pretty == True:
+        if pretty is True:
             qstring_string += self.writeAnnotation()
         return (qstring_string, indent_level)
-        
+
 class pbData(pbItem):
     def writeString(self, indent_level=0, pretty=True):
         data_string = ''
@@ -165,7 +164,7 @@ class pbData(pbItem):
                 data_string += ' ' # indent an additional space to make the byte groupings line up
                 grouping_line_counter = 0
         data_string += '>'
-        if pretty == True:
+        if pretty is True:
             data_string += self.writeAnnotation()
         indent_level = PopIndent(indent_level)
         return (data_string, indent_level)
@@ -258,7 +257,7 @@ KnownTypes = {
 
 def pbItemResolver(obj, type_name):
     initializer = KnownTypes[type_name]
-    if initializer != None:
+    if initializer:
         return initializer(obj, type_name)
     else:
         message = 'Unknown type "'+type_name+'" passed to pbItemResolver!'
