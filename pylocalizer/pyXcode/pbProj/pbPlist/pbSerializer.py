@@ -53,12 +53,12 @@ class PBSerializer(object):
             import plistlib
             plistlib.writePlist(obj, self.file_path)
 
-    def __writeObject(self, fd=None, obj=None):
-        if fd is None:
+    def __writeObject(self, file_descriptor=None, obj=None):
+        if file_descriptor is None:
             message = 'Fatal error, file descriptor is None'
             raise TypeError(message)
         if self.string_encoding is not None:
-            fd.write('// !$*'+self.string_encoding+'*$!\n')
+            file_descriptor.write('// !$*'+self.string_encoding+'*$!\n')
         if obj is not None:
             write_string, indent_level = obj.writeString()
-            fd.write(write_string)
+            file_descriptor.write(write_string)
