@@ -28,4 +28,12 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from . import test_runner
+import unittest
+from . import pbPlist_test
+from . import pylocalizer_test
+
+if __name__ == '__main__':
+    testsuite = unittest.TestLoader()
+    testsuite.addTest(pbPlist_test.pbPlistTestCases)
+    testsuite.addTest(pylocalizer_test.pylocalizerTestCases)
+    unittest.TextTestRunner(verbosity=1).run(testsuite)

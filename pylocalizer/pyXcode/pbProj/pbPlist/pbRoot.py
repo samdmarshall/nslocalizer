@@ -29,7 +29,8 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import collections
-from . import pbItem
+from .         import pbItem
+from functools import cmp_to_key
 
 def StringCmp(obj1, obj2):
     result = -1
@@ -98,7 +99,7 @@ class pbRoot(collections.MutableMapping):
 
     def sortedKeys(self):
         unsorted_keys = self.key_storage
-        sorted_keys = sorted(unsorted_keys, cmp=KeySorter)
+        sorted_keys = sorted(unsorted_keys, key=cmp_to_key(KeySorter))
         can_sort = False
         if len(sorted_keys) > 0:
             all_dictionaries = all((type(self[key].value) is dict or type(self[key].value) is pbRoot) for key in unsorted_keys)

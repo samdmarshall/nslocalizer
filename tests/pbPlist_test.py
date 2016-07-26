@@ -53,9 +53,9 @@ class pbPlistTestCases(unittest.TestCase):
         self.assertEqual(test_input.string_encoding, 'UTF8')
         self.assertEqual(test_output.string_encoding, 'UTF8')
         self.assertEqual(test_input.string_encoding, test_output.string_encoding)
-        self.assertNotEqual(len(test_input.root), 0)
-        self.assertNotEqual(len(test_output.root), 0)
-        self.assertEqual(len(test_input.root), len(test_output.root))
+        self.assertNotEqual(len(str(test_input.root)), 0)
+        self.assertNotEqual(len(str(test_output.root)), 0)
+        self.assertEqual(len(str(test_input.root)), len(str(test_output.root)))
 
     def test_array_qstrings(self):
         test_input, test_output = readAndWritefile('array_qstrings')
@@ -101,6 +101,3 @@ class pbPlistTestCases(unittest.TestCase):
 
     def test_xcode_proj(self):
         test_input, test_output = readAndWritefile('xcode_proj')
-
-if __name__ == '__main__':
-    unittest.main()

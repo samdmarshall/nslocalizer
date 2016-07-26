@@ -176,6 +176,7 @@ clean: check
 	$(call cleanlocation, ., -name ".DS_Store")
 	$(call cleanlocation, ., -name "*.pyc")
 	$(call cleanlocation, ., -name "__pycache__" -type d)
+	$(call cleanlocation, ./tests/pbPlist-test-data -name "output.plist")
 	@$(PRINTF) "done!\n"
 	@$(DISPLAY_SEPARATOR)
 	

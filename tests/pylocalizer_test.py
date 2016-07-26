@@ -34,6 +34,3 @@ class pylocalizerTestCases(unittest.TestCase):
     
     def test_donothing(self):
         self.assertEqual(True, True)
-
-if __name__ == '__main__':
-    unittest.main()
