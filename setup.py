@@ -49,7 +49,9 @@ setup(
     entry_points = { 
         'console_scripts': [ 'pylocalizer = pylocalizer:main' ] 
     },
-    test_suite = 'tests.pylocalizer_test',
+    test_suite = 'tests',
     zip_safe = False,
-    install_requires = []
+    install_requires = [
+        #'pyobjc-framework-Cocoa'
+    ]
 )

@@ -30,7 +30,7 @@
 
 import os
 from .pbProj           import pbProj
-from ...Helpers.Logger import Logger
+from ..Helpers.Logger import Logger
 
 class xcodeproj(object):
 
