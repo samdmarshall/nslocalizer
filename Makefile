@@ -53,6 +53,7 @@ TOUCH_CMD := touch
 CP_CMD := cp
 CAT_CMD := cat
 PIP_CMD := pip
+PIP3_CMD := pip3
 CCTREPORTER_CMD := codeclimate-test-reporter
 UNAME_CMD := uname
 EXIT_CMD := exit
@@ -61,6 +62,8 @@ TR_CMD := tr
 PYLINT_CMD := pylint
 
 TOX_PYENV := tox-pyenv
+PYOBJC_CORE := pyobjc-core
+PYOBJC_COCOA := pyobjc-framework-Cocoa
 
 # invoke the specific executable command
 
@@ -79,6 +82,7 @@ TOUCH := $(shell command -v $(TOUCH_CMD) 2> /dev/null)
 CP := $(shell command -v $(CP_CMD) 2> /dev/null)
 CAT := $(shell command -v $(CAT_CMD) 2> /dev/null)
 PIP := $(shell command -v $(PIP_CMD) 2> /dev/null)
+PIP3 := $(shell command -v $(PIP3_CMD) 2> /dev/null)
 CCTREPORTER := $(shell command -v $(CCTREPORTER_CMD) 2> /dev/null)
 UNAME := $(shell command -v $(UNAME_CMD) 2> /dev/null)
 EXIT := $(shell command -v $(EXIT_CMD) 2> /dev/null)
@@ -122,6 +126,7 @@ check:
 	$(call checkfor,$(PYTHON2_CMD))
 	$(call checkfor,$(PYTHON3_CMD))
 	$(call checkfor,$(PIP_CMD))
+	$(call checkfor,$(PIP3_CMD))
 	$(call checkfor,$(TOX_CMD))
 	$(call checkfor,$(COVERAGE_CMD))
 	$(call checkfor,$(PYLINT_CMD))
@@ -132,6 +137,7 @@ check:
 # --- 
 
 pipinstall = @$(PIP) install $1 $(USER_FLAG)
+pip3install = @$(PIP3) install $1
 geminstall = @$(GEM) install $1 $(USER_FLAG)
 
 install-deps: 
@@ -142,6 +148,13 @@ install-deps:
 	$(call pipinstall,$(TOX_PYENV))
 	$(call pipinstall,$(CCTREPORTER_CMD))
 	$(call pipinstall,$(PYLINT_CMD))
+	$(call pipinstall,$(PYOBJC_CORE))
+	$(call pipinstall,$(PYOBJC_COCOA))
+	@$(DISPLAY_SEPARATOR)
+	$(call checkfor,$(PYTHON3_CMD))
+	$(call checkfor,$(PIP3_CMD))
+	$(call pip3install,$(PYOBJC_CORE))
+	$(call pip3install,$(PYOBJC_COCOA))
 	@$(DISPLAY_SEPARATOR)
 	$(call checkfor,$(GEM_CMD))
 	$(call geminstall,$(DANGER_CMD))
