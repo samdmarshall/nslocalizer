@@ -117,7 +117,6 @@ else \
 fi
 
 check:
-	$(PRINTF) $(value PATH)
 	$(call checkfor,$(WHICH_CMD))
 	$(call checkfor,$(CAT_CMD))
 	$(call checkfor,$(CP_CMD))
