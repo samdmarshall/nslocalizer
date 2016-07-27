@@ -1,8 +1,8 @@
-machine:
-  python:
-    version: 2.7.10
-  ruby:
-    version: 2.2.4
+#machine:
+#  python:
+#    version: 2.7.10
+#  ruby:
+#    version: 2.2.4
 
 dependencies:
   override:
