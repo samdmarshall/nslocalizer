@@ -1,14 +1,12 @@
-#machine:
-#  python:
-#    version: 2.7.10
-#  ruby:
-#    version: 2.2.4
+machine:
+  xcode:
+    version: 7.3.1
 
-#dependencies:
-#  override:
-#    - make install-deps
-#    - pyenv local 2.7.10 3.5.0
+dependencies:
+  pre:
+    - make install-deps
+    - pyenv local 2.7.10 3.5.0
 
-#test:
-#  override:
-#    - make ci
+test:
+  override:
+    - make ci
