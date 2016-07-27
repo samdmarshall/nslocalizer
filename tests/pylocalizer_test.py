@@ -28,9 +28,18 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import os
 import unittest
+from pylocalizer import main
 
 class pylocalizerTestCases(unittest.TestCase):
     
-    def test_donothing(self):
-        self.assertEqual(True, True)
+    def test_missing_strings(self):
+        example_path = os.path.join(os.path.dirname(__file__), 'pylocalizer-example/pylocalizer-example.xcodeproj')
+        main(['--project', example_path, '--target', 'pylocalizer-example', '--find-missing'])
+        self.assertTrue(True)
+
+    def test_unused_strings(self):
+        example_path = os.path.join(os.path.dirname(__file__), 'pylocalizer-example/pylocalizer-example.xcodeproj')
+        main(['--project', example_path, '--target', 'pylocalizer-example', '--find-unused'])
+        self.assertTrue(True)

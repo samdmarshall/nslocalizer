@@ -134,7 +134,6 @@ def main(argv=sys.argv[1:]):
                 Logger.write().info('Could not find target "%s" in the specified project file.')
         else:
             Logger.write().error('Please specify a project (--project) with a valid target (--target), and at least one search flag (--find-unused, --find-missing).')
-    sys.exit(0)
 
 if __name__ == "__main__": # pragma: no cover
     main()
