@@ -145,7 +145,7 @@ check:
 pipinstall = @$(PIP) install $1 $(USER_FLAG)
 pip3install = @$(PIP3) install $1
 geminstall = @$(GEM) install $1 $(USER_FLAG)
-brewinstall = $(BREW) install $1
+brewinstall = @$(BREW) install $1
 
 install-deps:
 	$(call brewinstall,$(PYENV_CMD))
