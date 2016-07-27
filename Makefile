@@ -61,6 +61,7 @@ TPUT_CMD := tput
 TR_CMD := tr
 PYLINT_CMD := pylint
 BREW_CMD := brew
+PYENV_CMD := pyenv
 
 TOX_PYENV := tox-pyenv
 PYOBJC_CORE := pyobjc-core
@@ -91,6 +92,7 @@ TPUT := $(shell command -v $(TPUT_CMD) 2> /dev/null)
 TR := $(shell command -v $(TR_CMD) 2> /dev/null)
 PYLINT := $(shell command -v $(PYLINT_CMD) 2> /dev/null)
 BREW := $(shell command -v $(BREW_CMD) 2> /dev/null)
+PYENV := $(shell command -v $(PYENV_CMD) 2> /dev/null)
 
 SYSTEM := $(shell $(UNAME) -s)
 ifeq ($(SYSTEM),Darwin)
@@ -133,6 +135,7 @@ check:
 	$(call checkfor,$(TOX_CMD))
 	$(call checkfor,$(COVERAGE_CMD))
 	$(call checkfor,$(PYLINT_CMD))
+	$(call checkfor,$(PYENV_CMD))
 	$(call checkfor,$(GEM_CMD))
 	$(call checkfor,$(DANGER_CMD))
 	@$(DISPLAY_SEPARATOR)
@@ -145,6 +148,7 @@ geminstall = @$(GEM) install $1 $(USER_FLAG)
 brewinstall = $(BREW) install $1
 
 install-deps:
+	$(call brewinstall,$(PYENV_CMD))
 	$(call checkfor,$(PYTHON2_CMD))
 	$(call checkfor,$(PIP_CMD))
 	$(call pipinstall,$(COVERAGE_CMD))
