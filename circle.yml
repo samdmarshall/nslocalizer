@@ -2,7 +2,7 @@ machine:
   xcode:
     version: 7.3.1
   pre:
-    - pip install virtualenv --user
+    - export PATH = $PATH:$HOME/Library/Python/2.7/bin:$HOME/.gem/ruby/2.0.0/bin
 
 dependencies:
   pre:
