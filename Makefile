@@ -143,7 +143,7 @@ check:
 # --- 
 
 pipinstall = @$(PIP) install $1 $(USER_FLAG)
-pip3install = @$(PIP3) install $1
+pipthreeinstall = @$(PIP3) install $1
 geminstall = @$(GEM) install $1 $(USER_FLAG)
 brewinstall = @$(BREW) install $1
 
@@ -161,8 +161,8 @@ install-deps:
 	@$(DISPLAY_SEPARATOR)
 	$(call brewinstall,$(PYTHON3_CMD))
 	$(call checkfor,$(PIP3_CMD))
-	$(call pip3install,$(PYOBJC_CORE))
-	$(call pip3install,$(PYOBJC_COCOA))
+	$(call pipthreeinstall,$(PYOBJC_CORE))
+	$(call pipthreeinstall,$(PYOBJC_COCOA))
 	@$(DISPLAY_SEPARATOR)
 	$(call checkfor,$(GEM_CMD))
 	$(call geminstall,$(DANGER_CMD))
