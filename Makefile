@@ -60,6 +60,7 @@ EXIT_CMD := exit
 TPUT_CMD := tput
 TR_CMD := tr
 PYLINT_CMD := pylint
+BREW_CMD := brew
 
 TOX_PYENV := tox-pyenv
 PYOBJC_CORE := pyobjc-core
@@ -89,6 +90,7 @@ EXIT := $(shell command -v $(EXIT_CMD) 2> /dev/null)
 TPUT := $(shell command -v $(TPUT_CMD) 2> /dev/null)
 TR := $(shell command -v $(TR_CMD) 2> /dev/null)
 PYLINT := $(shell command -v $(PYLINT_CMD) 2> /dev/null)
+BREW := $(shell command -v $(BREW_CMD) 2> /dev/null)
 
 SYSTEM := $(shell $(UNAME) -s)
 ifeq ($(SYSTEM),Darwin)
@@ -123,6 +125,7 @@ check:
 	$(call checkfor,$(FIND_CMD))
 	$(call checkfor,$(XARGS_CMD))
 	$(call checkfor,$(RM_CMD))
+	$(call checkfor,$(BREW_CMD))
 	$(call checkfor,$(PYTHON2_CMD))
 	$(call checkfor,$(PYTHON3_CMD))
 	$(call checkfor,$(PIP_CMD))
@@ -139,8 +142,9 @@ check:
 pipinstall = @$(PIP) install $1 $(USER_FLAG)
 pip3install = @$(PIP3) install $1
 geminstall = @$(GEM) install $1 $(USER_FLAG)
+brewinstall = $(BREW) install $1
 
-install-deps: 
+install-deps:
 	$(call checkfor,$(PYTHON2_CMD))
 	$(call checkfor,$(PIP_CMD))
 	$(call pipinstall,$(COVERAGE_CMD))
@@ -151,7 +155,7 @@ install-deps:
 	$(call pipinstall,$(PYOBJC_CORE))
 	$(call pipinstall,$(PYOBJC_COCOA))
 	@$(DISPLAY_SEPARATOR)
-	$(call checkfor,$(PYTHON3_CMD))
+	$(call brewinstall,$(PYTHON3_CMD))
 	$(call checkfor,$(PIP3_CMD))
 	$(call pip3install,$(PYOBJC_CORE))
 	$(call pip3install,$(PYOBJC_COCOA))
