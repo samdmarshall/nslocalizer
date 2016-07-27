@@ -7,7 +7,7 @@ machine:
     - ln -s $HOME/Library/Python/2.7/bin/virtualenv /usr/local/bin/virtualenv
 
 dependencies:
-  pre:
+  override:
     - make install-deps
     - pyenv install 2.7.10
     - pyenv install 3.5.2
