@@ -2,7 +2,7 @@ machine:
   xcode:
     version: 7.3.1
   pre:
-    - if [ ! -e '$HOME/virtualenvs/venv-system' ]; then mkdir -p '$HOME/virtualenvs'; pushd '$HOME/virtualenvs'; virtualenv venv-system; popd; fi
+    - pip install virtualenv --user
 
 dependencies:
   pre:
