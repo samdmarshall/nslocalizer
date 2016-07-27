@@ -6,7 +6,7 @@ machine:
     - export PATH=/usr/local/bin:$PATH:$HOME/Library/Python/2.7/bin:$HOME/.gem/ruby/2.0.0/bin
     - pip install --user --ignore-installed --upgrade virtualenv
     - ln -s $HOME/Library/Python/2.7/bin/virtualenv /usr/local/bin/virtualenv
-    - brew update
+    - brew update && brew update
 
 dependencies:
   override:
