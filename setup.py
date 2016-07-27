@@ -51,6 +51,7 @@ setup(
     test_suite = 'tests',
     zip_safe = False,
     install_requires = [
-        #'pyobjc-framework-Cocoa'
+        'pyobjc-core',
+        'pyobjc-framework-Cocoa'
     ]
 )

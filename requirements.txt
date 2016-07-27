@@ -4,3 +4,4 @@ tox_pyenv >= 1.0.3
 codeclimate-test-reporter >= 0.1.2
 pylint >= 1.6.1
 pyobjc-frameworks-Cocoa >= 2.5.1
+pyobjc-core >= 2.5.1
