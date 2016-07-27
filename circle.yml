@@ -3,10 +3,10 @@ machine:
     version: 7.3.1
   pre:
     - export PATH=$PATH:$HOME/Library/Python/2.7/bin:$HOME/.gem/ruby/2.0.0/bin
-    - make install-deps
 
 dependencies:
   pre:
+    - make install-deps
     - pyenv local 2.7.10 3.5.0
 
 test:
