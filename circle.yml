@@ -3,6 +3,8 @@ machine:
     version: 7.3.1
   pre:
     - export PATH=$PATH:$HOME/Library/Python/2.7/bin:$HOME/.gem/ruby/2.0.0/bin
+    - brew install pip
+    - pip install virtualenv
 
 dependencies:
   pre:
