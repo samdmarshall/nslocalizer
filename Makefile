@@ -53,7 +53,7 @@ TOUCH_CMD := touch
 CP_CMD := cp
 CAT_CMD := cat
 PIP_CMD := pip
-PIP_THREE_CMD := pip3
+PIP3_CMD := pip3
 CCTREPORTER_CMD := codeclimate-test-reporter
 UNAME_CMD := uname
 EXIT_CMD := exit
@@ -84,7 +84,7 @@ TOUCH = $(shell command -v $(TOUCH_CMD) 2> /dev/null)
 CP = $(shell command -v $(CP_CMD) 2> /dev/null)
 CAT = $(shell command -v $(CAT_CMD) 2> /dev/null)
 PIP = $(shell command -v $(PIP_CMD) 2> /dev/null)
-PIP_THREE = $(shell command -v $(PIP_THREE_CMD) 2> /dev/null)
+PIP3 = $(shell command -v $(PIP3_CMD) 2> /dev/null)
 CCTREPORTER = $(shell command -v $(CCTREPORTER_CMD) 2> /dev/null)
 UNAME = $(shell command -v $(UNAME_CMD) 2> /dev/null)
 EXIT = $(shell command -v $(EXIT_CMD) 2> /dev/null)
@@ -143,7 +143,7 @@ check:
 # --- 
 
 pipinstall = @$(PIP) install $1 $(USER_FLAG)
-pip3install = @$(PIP_THREE) install $1
+pip3install = @$(PIP3) install $1
 geminstall = @$(GEM) install $1 $(USER_FLAG)
 brewinstall = @$(BREW) install $1
 
