@@ -45,16 +45,16 @@ class PBParser(object):
             file_descriptor = open(file_path, 'r')
             self.data = file_descriptor.read()
             file_descriptor.close()
-        except IOError as exception:
+        except IOError as exception: # pragma: no cover
             print('I/O error({0}): {1}'.format(exception.errno, exception.strerror))
-        except:
+        except: # pragma: no cover
             print('Unexpected error:'+str(sys.exc_info()[0]))
             raise
 
     def read(self):
         parsed_plist = None
         prefix = self.data[0:6]
-        if prefix == 'bplist' or prefix == '<?xml ':
+        if prefix == 'bplist' or prefix == '<?xml ': # pragma: no cover
             if prefix == 'bplist':
                 self.file_type = 'binary'
                 if not sys.version_info >= (3, 4):
@@ -84,7 +84,7 @@ class PBParser(object):
         # we can ignore the annotation value here
         if not can_parse:
             if self.index != len(self.data):
-                if requires_object is True:
+                if requires_object is True: # pragma: no cover
                     message = 'Invalid plist file!'
                     raise Exception(message)
         else:
@@ -111,7 +111,7 @@ class PBParser(object):
             # parse unquoted string
             parsed_item = pbItem.pbItemResolver(self.__parseUnquotedString(), 'string') # pylint: disable=redefined-variable-type
         else:
-            if requires_object is True:
+            if requires_object is True: # pragma: no cover
                 message = 'Unexpected character "0x'+str(format(ord(starting_character), 'x'))+'" at line '+str(StrParse.LineNumberForIndex(self.data, self.index))
                 raise Exception(message)
         return parsed_item
@@ -127,7 +127,7 @@ class PBParser(object):
                 break
         if start_index != self.index:
             return self.data[start_index:self.index]
-        else:
+        else: # pragma: no cover
             message = 'Unexpected EOF'
             raise Exception(message)
 
@@ -144,7 +144,7 @@ class PBParser(object):
                 self.index += 2
             else:
                 self.index += 1
-        if self.index >= string_length:
+        if self.index >= string_length: # pragma: no cover
             message = 'Unterminated quoted string starting on line '+str(StrParse.LineNumberForIndex(self.data, self.index))
             raise Exception(message)
         else:
@@ -167,14 +167,14 @@ class PBParser(object):
             if StrParse.IsHexNumber(current_char) is True:
                 byte_stream += current_char
             else:
-                if not StrParse.IsDataFormattingWhitespace(current_char):
+                if not StrParse.IsDataFormattingWhitespace(current_char): # pragma: no cover
                     message = 'Malformed data byte group at line '+str(StrParse.LineNumberForIndex(self.data, self.index))+'; invalid hex'
                     raise Exception(message)
             self.index += 1
-        if (len(byte_stream) % 2) == 1:
+        if (len(byte_stream) % 2) == 1: # pragma: no cover
             message = 'Malformed data byte group at line '+str(StrParse.LineNumberForIndex(self.data, start_index))+'; uneven length'
             raise Exception(message)
-        if end_index == 0:
+        if end_index == 0: # pragma: no cover
             message = 'Expected terminating >" for data at line '+str(StrParse.LineNumberForIndex(self.data, start_index))
             raise Exception(message)
         data_object = bytearray.fromhex(byte_stream)
@@ -194,7 +194,7 @@ class PBParser(object):
                 self.index += 1
             new_object = self.__readTest(False)
         current_char = self.data[self.index]
-        if current_char != ')':
+        if current_char != ')': # pragma: no cover
             message = 'Expected terminating ")" for array at line '+str(StrParse.LineNumberForIndex(self.data, start_index))
             raise Exception(message)
         self.index += 1 # skip over ending ")"
@@ -219,7 +219,7 @@ class PBParser(object):
                 self.index += 1
                 value_object = pbItem.pbItemResolver(new_object.value, new_object.type_name)
                 value_object.annotation = new_object.annotation
-            else:
+            else: # pragma: no cover
                 message = 'Missing ";" or "=" on line '+str(StrParse.LineNumberForIndex(self.data, self.index))
                 raise Exception(message)
             can_parse, self.index, annotation = StrParse.IndexOfNextNonSpace(self.data, self.index)
@@ -232,7 +232,7 @@ class PBParser(object):
                 self.index += 1 # advancing to the next key
             new_object = self.__readTest(False)
         current_char = self.data[self.index]
-        if current_char != '}':
+        if current_char != '}': # pragma: no cover
             message = 'Expected terminating "}" for dictionary at line '+str(StrParse.LineNumberForIndex(self.data, start_index))
             raise Exception(message)
         self.index += 1 # skip over ending "}"

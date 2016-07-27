@@ -41,10 +41,9 @@ setup(
     packages = [ 
         'pylocalizer',
         'pylocalizer/Helpers',
-        'pylocalizer/pyXcode',
-        'pylocalizer/pyXcode/pbProj',
-        'pylocalizer/pyXcode/pbProj/pbPlist',
-        'pylocalizer/pyXcode/pyxcwsdata'
+        'pylocalizer/xcodeproj',
+        'pylocalizer/xcodeproj/pbProj',
+        'pylocalizer/xcodeproj/pbProj/pbPlist'
     ],
     entry_points = { 
         'console_scripts': [ 'pylocalizer = pylocalizer:main' ] 

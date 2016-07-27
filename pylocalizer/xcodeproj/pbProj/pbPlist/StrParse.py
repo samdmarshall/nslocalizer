@@ -224,7 +224,7 @@ def UnQuotifyString(string_data, start_index, end_index): # http://www.opensourc
                     unicode_numbers = extracted_string[starting_index:ending_index]
                     for number in unicode_numbers:
                         index += 1
-                        if IsHexNumber(number) is False:
+                        if IsHexNumber(number) is False: # pragma: no cover
                             message = 'Invalid unicode sequence on line '+str(LineNumberForIndex(string_data, start_index+index))
                             raise Exception(message)
                     formatted_string += unichr(int(unicode_numbers, 16))
@@ -266,7 +266,7 @@ def IsValidUnquotedStringCharacter(character):
     if len(character) == 1:
         valid_characters = set(string.ascii_letters+string.digits+'_$/:.-')
         return set(character).issubset(valid_characters)
-    else:
+    else: # pragma: no cover
         message = 'The function "IsValidUnquotedStringCharacter()" can only take single characters!'
         raise ValueError(message)
 

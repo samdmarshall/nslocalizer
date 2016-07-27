@@ -44,17 +44,17 @@ class PBSerializer(object):
                 file_descriptor = open(self.file_path, 'w')
                 self.__writeObject(file_descriptor, obj)
                 file_descriptor.close()
-            except IOError as exception:
+            except IOError as exception: # pragma: no cover
                 print('I/O error({0}): {1}'.format(exception.errno, exception.strerror))
-            except:
+            except: # pragma: no cover
                 print('Unexpected error:'+str(sys.exc_info()[0]))
                 raise
-        else:
+        else: # pragma: no cover
             import plistlib
             plistlib.writePlist(obj, self.file_path)
 
     def __writeObject(self, file_descriptor=None, obj=None):
-        if file_descriptor is None:
+        if file_descriptor is None: # pragma: no cover
             message = 'Fatal error, file descriptor is None'
             raise TypeError(message)
         if self.string_encoding is not None:

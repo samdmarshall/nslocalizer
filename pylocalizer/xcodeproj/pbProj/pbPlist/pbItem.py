@@ -52,12 +52,12 @@ class pbItem(object):
     def __init__(self, value=None, type_name=None, annotation=None):
         if value != None and type_name != None:
             self.value = value
-            if type_name not in KnownTypes.keys():
+            if type_name not in KnownTypes.keys(): # pragma: no cover
                 message = 'Unknown type "'+type_name+'" passed to '+self.__class__.__name__+' initializer!'
                 raise TypeError(message)
             self.type_name = type_name
             self.annotation = annotation
-        else:
+        else: # pragma: no cover
             message = 'The class "'+self.__class__.__name__+'" must be initialized with a non-None value'
             raise ValueError(message)
 
@@ -102,7 +102,7 @@ class pbItem(object):
     def writeStringRep(self, indent_level=0, pretty=True):
         return self.writeString(indent_level, pretty)
 
-    def writeString(self, indent_level=0, pretty=True): # pylint: disable=no-self-use,unused-variable
+    def writeString(self, indent_level=0, pretty=True): # pylint: disable=no-self-use,unused-variable ; # pragma: no cover
         message = 'This is a base class, it cannot write!'
         raise Exception(message)
 
@@ -259,6 +259,6 @@ def pbItemResolver(obj, type_name):
     initializer = KnownTypes[type_name]
     if initializer:
         return initializer(obj, type_name)
-    else:
+    else: # pragma: no cover
         message = 'Unknown type "'+type_name+'" passed to pbItemResolver!'
         raise TypeError(message)

@@ -28,6 +28,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import os
 import collections
 from . import PBX_Constants
 
@@ -119,6 +120,19 @@ class PBX_Base_Phase(PBXItem):
         super(PBX_Base_Phase, self).resolveGraph(project)
         self.resolveGraphNodesForArray(PBX_Constants.kPBX_PHASE_files, project)
 
+def resolvePathTypeFromSource(source):
+    lookup = {
+        '<absolute>': 'resolveAbsolutePath',
+        '<group>': 'resolveGroupPath',
+        'SOURCE_ROOT': 'resolveSourceRootPath',
+        'DEVELOPER_DIR': 'resolveDeveloperDirPath',
+        'BUILT_PRODUCTS_DIR': 'resolveBuildProductsPath',
+        'SDKROOT': 'resolveSDKPath'
+    }
+    if source in list(lookup.keys()):
+        return lookup[source]
+      
+
 class PBX_Base_Reference(PBXItem):
     def __init__(self, identifier, dictionary):
         super(PBX_Base_Reference, self).__init__(identifier, dictionary)
@@ -126,10 +140,31 @@ class PBX_Base_Reference(PBXItem):
         super(PBX_Base_Reference, self).resolveGraph(project)
     def findParent(self, project):
         parent = None
-        results = filter(lambda pbxref: isinstance(pbxref, PBX_Base_Reference) and PBX_Constants.kPBX_REFERENCE_children in pbxref.keys(), project.pbxObjects)
+        results = filter(lambda pbxref: isinstance(pbxref, PBX_Base_Reference) and PBX_Constants.kPBX_REFERENCE_children in pbxref.keys(), project.pbx_objects)
         for item in results:
-            child_results = filter(lambda ref: self.identifier == ref.identifier, item[PBX_Constants.kPBX_REFERENCE_children])
+            child_results = list(filter(lambda ref: self.identifier == ref.identifier, item[PBX_Constants.kPBX_REFERENCE_children]))
             if len(child_results) > 0:
                 parent = item
                 break
         return parent
+    def resolveAbsolutePath(self, project):
+        return ''
+    def resolveGroupPath(self, project):
+        file_path = ''
+        parent = self.findParent(project)
+        if parent is not None:
+            grandparent_path = parent.resolvePath(project)
+            file_path = os.path.join(grandparent_path, '')
+        return file_path
+    def resolveSourceRootPath(self, project):
+        project_dir = os.path.dirname(os.path.dirname(project.pbx_file_path))
+        return os.path.join(project_dir, self.store[PBX_Constants.kPBX_REFERENCE_path])
+    def resolvePath(self, project):
+        source = self.store[PBX_Constants.kPBX_REFERENCE_sourceTree]
+        source_func = resolvePathTypeFromSource(source)
+        parent_path = getattr(self, source_func)(project)
+        current_path = ''
+        if PBX_Constants.kPBX_REFERENCE_path in list(self.store.keys()):
+            current_path = self.store[PBX_Constants.kPBX_REFERENCE_path]
+        file_path = os.path.join(parent_path, current_path)
+        return file_path

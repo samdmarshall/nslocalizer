@@ -28,31 +28,5 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
-from .pyxcwsdata       import xcworkspacedata
-from ..Helpers.Logger  import Logger
-from .                 import xcodeproj
-
-class xcworkspace(object):
-
-    def __init__(self, xcworkspace_file_path):
-        if os.path.exists(xcworkspace_file_path):
-            if xcworkspace_file_path.endswith('.xcworkspace'):
-                self.file_path = xcworkspace_file_path
-                # loading the pbxproj
-                workspace_data_path = os.path.join(self.file_path, 'contents.xcworkspacedata')
-                if os.path.exists(workspace_data_path):
-                    self.contents_file = xcworkspacedata.xcworkspacedata(workspace_data_path)
-                else:
-                    Logger.write().error('Could not find the xcworkspacedata file!')
-            else:
-                Logger.write().error('Not a Xcode workspace file!')
-        else:
-            Logger.write().error('Could not find the Xcode workspace file!')
-
-    def projects(self):
-        project_list = list()
-        for project_file_path in self.contents_file.projects():
-            project = xcodeproj.xcodeproj(project_file_path)
-            project_list.append(project)
-        return project_list
+from __future__       import print_function
+from .Helpers.Logger  import Logger
