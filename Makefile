@@ -96,7 +96,11 @@ PYENV = $(shell command -v $(PYENV_CMD) 2> /dev/null)
 
 SYSTEM := $(shell $(UNAME) -s)
 ifeq ($(SYSTEM),Darwin)
+ifeq ($(CIRCLE_BUILD_IMAGE),osx)
+	USER_FLAG :=
+else
 	USER_FLAG := --user
+endif
 else
 	USER_FLAG := 
 endif
