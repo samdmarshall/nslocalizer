@@ -96,11 +96,7 @@ PYENV = $(shell command -v $(PYENV_CMD) 2> /dev/null)
 
 SYSTEM := $(shell $(UNAME) -s)
 ifeq ($(SYSTEM),Darwin)
-ifeq ($(CIRCLE_BUILD_IMAGE),osx)
-	USER_FLAG :=
-else
 	USER_FLAG := --user
-endif
 else
 	USER_FLAG := 
 endif
@@ -149,7 +145,7 @@ check:
 
 pipinstall = @$(PIP) install $1 $(USER_FLAG)
 pipthreeinstall = @$(PIP3_CMD) install $1
-geminstall = @$(GEM) install $1 $(USER_FLAG)
+geminstall = @$(GEM) install $1
 brewinstall = @$(BREW) install $1
 
 install-deps:
