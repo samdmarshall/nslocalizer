@@ -143,7 +143,7 @@ check:
 # --- 
 
 pipinstall = @$(PIP) install $1 $(USER_FLAG)
-pipthreeinstall = @$(PIP3) install $1
+pipthreeinstall = @$(PIP3_CMD) install $1
 geminstall = @$(GEM) install $1 $(USER_FLAG)
 brewinstall = @$(BREW) install $1
 
