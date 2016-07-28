@@ -178,15 +178,6 @@ install-deps:
 	$(call pyenv_exec, install, 3.5.1)
 	@$(DISPLAY_SEPARATOR)
 
-# --- 
-
-setup-osx-build:
-	export PATH=/usr/local/bin:$PATH:/Users/distiller/Library/Python/2.7/bin
-	$(PIP) install --user --ignore-installed --upgrade virtualenv
-	ln -s $HOME/Library/Python/2.7/bin/virtualenv /usr/local/bin/virtualenv
-	cd "$(brew --repository)" && git fetch && git reset --hard origin/master
-	brew update
-
 # ---
 
 # this is for installing any tools that we don't already have
@@ -312,4 +303,4 @@ lint: check
 
 # ---
 
-.PHONY: danger lint ci report test build3 build2 clean install-tools install-deps check setup-osx-build
+.PHONY: danger lint ci report test build3 build2 clean install-tools install-deps check
