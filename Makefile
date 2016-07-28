@@ -147,7 +147,7 @@ pipthreeinstall = @$(PIP3_CMD) install $1
 geminstall = @$(GEM) install $1
 brewinstall = @$(BREW) install $1
 
-pyenv_exec = @$(PYENV) $1 $2
+pyenv_exec = @$(PYENV_CMD) $1 $2
 
 install-deps:
 	$(call brewinstall,$(PYENV_CMD))
