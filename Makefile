@@ -181,11 +181,11 @@ install-deps:
 # --- 
 
 setup-osx-build:
-	@export PATH=/usr/local/bin:$PATH:/Users/distiller/Library/Python/2.7/bin
-	@$(PIP) install --user --ignore-installed --upgrade virtualenv
-	@ln -s $HOME/Library/Python/2.7/bin/virtualenv /usr/local/bin/virtualenv
-	@cd "$(brew --repository)" && git fetch && git reset --hard origin/master
-	@brew update
+	export PATH=/usr/local/bin:$PATH:/Users/distiller/Library/Python/2.7/bin
+	$(PIP) install --user --ignore-installed --upgrade virtualenv
+	ln -s $HOME/Library/Python/2.7/bin/virtualenv /usr/local/bin/virtualenv
+	cd "$(brew --repository)" && git fetch && git reset --hard origin/master
+	brew update
 
 # ---
 
