@@ -37,12 +37,6 @@ import struct
 import CoreFoundation
 from .Logger    import Logger
 
-DEVELOPER_DIR = os.environ.get('DEVELOPER_DIR')
-if DEVELOPER_DIR:
-    Logger.write().info('DEVELOPER_DIR environment variable is already set, existing value "%s" will be used.' % (DEVELOPER_DIR))
-else:
-    os.environ['DEVELOPER_DIR'] = resolve_developer_path()
-
 def hashStringForPath(path):
     """
     Returns the hash for a project's DerivedData location.
@@ -168,7 +162,7 @@ def make_subprocess_call(call_args, shell_state=False):
         output = subprocess.check_output(call_args, shell=shell_state)
         error = 0
     except subprocess.CalledProcessError as exception:
-        output = exception.output
+        output = str(exception.output)
         error = exception.returncode
     return (output, error)
 
@@ -177,7 +171,7 @@ def make_xcrun_with_args(args_tuple):
     if xcrun_result[1] != 0:
         Logger.write().error('[xcrun]: Error in exec!')
         sys.exit()
-    xcrun_output = xcrun_result[0].rstrip('\n')
+    xcrun_output = str(xcrun_result[0]).rstrip('\n')
     return xcrun_output
 
 def resolve_sdk_path(sdk_name):
@@ -188,5 +182,11 @@ def resolve_developer_path():
     if xcrun_result[1] != 0:
         Logger.write().error('[xcrun]: Please run Xcode first!')
         sys.exit()
-    developer_path = xcrun_result[0].rstrip('\n')
+    developer_path = str(xcrun_result[0]).rstrip('\n')
     return developer_path
+
+DEVELOPER_DIR = os.environ.get('DEVELOPER_DIR')
+if DEVELOPER_DIR:
+    Logger.write().info('DEVELOPER_DIR environment variable is already set, existing value "%s" will be used.' % (DEVELOPER_DIR))
+else:
+    os.environ['DEVELOPER_DIR'] = resolve_developer_path()

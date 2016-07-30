@@ -1,0 +1,224 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		1544655C1D490E5A00243158 /* all */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 1544655D1D490E5A00243158 /* Build configuration list for PBXAggregateTarget "all" */;
+			buildPhases = (
+			);
+			dependencies = (
+				154465631D490E6500243158 /* PBXTargetDependency */,
+			);
+			name = all;
+			productName = all;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		154465621D490E6500243158 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 154465461D490DA200243158 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 154465581D490E3700243158;
+			remoteInfo = ci;
+		};
+		154465641D490EC500243158 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 154465461D490DA200243158 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 154465501D490E0800243158;
+			remoteInfo = "install-deps";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXGroup section */
+		154465451D490DA200243158 = {
+			isa = PBXGroup;
+			children = (
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		154465501D490E0800243158 /* install-deps */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "install-deps";
+			buildConfigurationList = 154465511D490E0800243158 /* Build configuration list for PBXLegacyTarget "install-deps" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "";
+			dependencies = (
+			);
+			name = "install-deps";
+			passBuildSettingsInEnvironment = 1;
+			productName = "install-deps";
+		};
+		154465581D490E3700243158 /* ci */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = ci;
+			buildConfigurationList = 154465591D490E3700243158 /* Build configuration list for PBXLegacyTarget "ci" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "";
+			dependencies = (
+				154465651D490EC500243158 /* PBXTargetDependency */,
+			);
+			name = ci;
+			passBuildSettingsInEnvironment = 1;
+			productName = test;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		154465461D490DA200243158 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Samantha Marshall";
+				TargetAttributes = {
+					154465501D490E0800243158 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					154465581D490E3700243158 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					1544655C1D490E5A00243158 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 154465491D490DA200243158 /* Build configuration list for PBXProject "pylocalizer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 154465451D490DA200243158;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				154465501D490E0800243158 /* install-deps */,
+				154465581D490E3700243158 /* ci */,
+				1544655C1D490E5A00243158 /* all */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXTargetDependency section */
+		154465631D490E6500243158 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 154465581D490E3700243158 /* ci */;
+			targetProxy = 154465621D490E6500243158 /* PBXContainerItemProxy */;
+		};
+		154465651D490EC500243158 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 154465501D490E0800243158 /* install-deps */;
+			targetProxy = 154465641D490EC500243158 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1544654B1D490DA200243158 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		1544654C1D490DA200243158 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		154465521D490E0800243158 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		154465531D490E0800243158 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		1544655A1D490E3700243158 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1544655B1D490E3700243158 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		1544655E1D490E5A00243158 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1544655F1D490E5A00243158 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		154465491D490DA200243158 /* Build configuration list for PBXProject "pylocalizer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1544654B1D490DA200243158 /* Debug */,
+				1544654C1D490DA200243158 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		154465511D490E0800243158 /* Build configuration list for PBXLegacyTarget "install-deps" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				154465521D490E0800243158 /* Debug */,
+				154465531D490E0800243158 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		154465591D490E3700243158 /* Build configuration list for PBXLegacyTarget "ci" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1544655A1D490E3700243158 /* Debug */,
+				1544655B1D490E3700243158 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		1544655D1D490E5A00243158 /* Build configuration list for PBXAggregateTarget "all" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1544655E1D490E5A00243158 /* Debug */,
+				1544655F1D490E5A00243158 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 154465461D490DA200243158 /* Project object */;
+}

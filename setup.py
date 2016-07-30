@@ -41,15 +41,17 @@ setup(
     packages = [ 
         'pylocalizer',
         'pylocalizer/Helpers',
-        'pylocalizer/pyXcode',
-        'pylocalizer/pyXcode/pbProj',
-        'pylocalizer/pyXcode/pbProj/pbPlist',
-        'pylocalizer/pyXcode/pyxcwsdata'
+        'pylocalizer/xcodeproj',
+        'pylocalizer/xcodeproj/pbProj',
+        'pylocalizer/xcodeproj/pbProj/pbPlist'
     ],
     entry_points = { 
         'console_scripts': [ 'pylocalizer = pylocalizer:main' ] 
     },
-    test_suite = 'tests.pylocalizer_test',
+    test_suite = 'tests',
     zip_safe = False,
-    install_requires = []
+    install_requires = [
+        'pyobjc-core',
+        'pyobjc-framework-Cocoa'
+    ]
 )

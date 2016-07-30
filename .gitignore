@@ -10,4 +10,4 @@ __pycache__/
 htmlcov/
 .eggs/
 lint_output.txt
-
+output.plist

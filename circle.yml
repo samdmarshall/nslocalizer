@@ -1,13 +1,17 @@
 machine:
-  python:
-    version: 2.7.10
-  ruby:
-    version: 2.2.4
+  xcode:
+    version: 7.3.1
+  pre:
+    - export PATH=/usr/local/bin:$PATH:/Users/distiller/Library/Python/2.7/bin
+    - pip install --user --ignore-installed --upgrade virtualenv
+    - ln -s $HOME/Library/Python/2.7/bin/virtualenv /usr/local/bin/virtualenv
+    - cd "$(brew --repository)" && git fetch && git reset --hard origin/master
+    - brew update
 
 dependencies:
   override:
     - make install-deps
-    - pyenv local 2.7.10 3.5.0
+    - pyenv local 2.7.10 3.5.1
 
 test:
   override:

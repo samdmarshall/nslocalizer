@@ -53,38 +53,46 @@ TOUCH_CMD := touch
 CP_CMD := cp
 CAT_CMD := cat
 PIP_CMD := pip
+PIP3_CMD := pip3
 CCTREPORTER_CMD := codeclimate-test-reporter
 UNAME_CMD := uname
 EXIT_CMD := exit
 TPUT_CMD := tput
 TR_CMD := tr
 PYLINT_CMD := pylint
+BREW_CMD := brew
+PYENV_CMD := pyenv
 
 TOX_PYENV := tox-pyenv
+PYOBJC_CORE := pyobjc-core
+PYOBJC_COCOA := pyobjc-framework-Cocoa
 
 # invoke the specific executable command
 
-PYTHON2 := $(shell command -v $(PYTHON2_CMD) 2> /dev/null)
-PYTHON3 := $(shell command -v $(PYTHON3_CMD) 2> /dev/null)
-TOX := $(shell command -v $(TOX_CMD) 2> /dev/null)
-COVERAGE := $(shell command -v $(COVERAGE_CMD) 2> /dev/null)
-DANGER := $(shell command -v $(DANGER_CMD) 2> /dev/null)
-GEM := $(shell command -v $(GEM_CMD) 2> /dev/null)
-FIND := $(shell command -v $(FIND_CMD) 2> /dev/null)
-RM := $(shell command -v $(RM_CMD) 2> /dev/null)
-WHICH := $(shell command -v $(WHICH_CMD) 2> /dev/null)
-XARGS := $(shell command -v $(XARGS_CMD) 2> /dev/null)
-PRINTF := $(shell command -v $(PRINTF_CMD) 2> /dev/null)
-TOUCH := $(shell command -v $(TOUCH_CMD) 2> /dev/null)
-CP := $(shell command -v $(CP_CMD) 2> /dev/null)
-CAT := $(shell command -v $(CAT_CMD) 2> /dev/null)
-PIP := $(shell command -v $(PIP_CMD) 2> /dev/null)
-CCTREPORTER := $(shell command -v $(CCTREPORTER_CMD) 2> /dev/null)
-UNAME := $(shell command -v $(UNAME_CMD) 2> /dev/null)
-EXIT := $(shell command -v $(EXIT_CMD) 2> /dev/null)
-TPUT := $(shell command -v $(TPUT_CMD) 2> /dev/null)
-TR := $(shell command -v $(TR_CMD) 2> /dev/null)
-PYLINT := $(shell command -v $(PYLINT_CMD) 2> /dev/null)
+PYTHON2 = $(shell command -v $(PYTHON2_CMD) 2> /dev/null)
+PYTHON3 = $(shell command -v $(PYTHON3_CMD) 2> /dev/null)
+TOX = $(shell command -v $(TOX_CMD) 2> /dev/null)
+COVERAGE = $(shell command -v $(COVERAGE_CMD) 2> /dev/null)
+DANGER = $(shell command -v $(DANGER_CMD) 2> /dev/null)
+GEM = $(shell command -v $(GEM_CMD) 2> /dev/null)
+FIND = $(shell command -v $(FIND_CMD) 2> /dev/null)
+RM = $(shell command -v $(RM_CMD) 2> /dev/null)
+WHICH = $(shell command -v $(WHICH_CMD) 2> /dev/null)
+XARGS = $(shell command -v $(XARGS_CMD) 2> /dev/null)
+PRINTF = $(shell command -v $(PRINTF_CMD) 2> /dev/null)
+TOUCH = $(shell command -v $(TOUCH_CMD) 2> /dev/null)
+CP = $(shell command -v $(CP_CMD) 2> /dev/null)
+CAT = $(shell command -v $(CAT_CMD) 2> /dev/null)
+PIP = $(shell command -v $(PIP_CMD) 2> /dev/null)
+PIP3 = $(shell command -v $(PIP3_CMD) 2> /dev/null)
+CCTREPORTER = $(shell command -v $(CCTREPORTER_CMD) 2> /dev/null)
+UNAME = $(shell command -v $(UNAME_CMD) 2> /dev/null)
+EXIT = $(shell command -v $(EXIT_CMD) 2> /dev/null)
+TPUT = $(shell command -v $(TPUT_CMD) 2> /dev/null)
+TR = $(shell command -v $(TR_CMD) 2> /dev/null)
+PYLINT = $(shell command -v $(PYLINT_CMD) 2> /dev/null)
+BREW = $(shell command -v $(BREW_CMD) 2> /dev/null)
+PYENV = $(shell command -v $(PYENV_CMD) 2> /dev/null)
 
 SYSTEM := $(shell $(UNAME) -s)
 ifeq ($(SYSTEM),Darwin)
@@ -119,12 +127,15 @@ check:
 	$(call checkfor,$(FIND_CMD))
 	$(call checkfor,$(XARGS_CMD))
 	$(call checkfor,$(RM_CMD))
+	$(call checkfor,$(BREW_CMD))
 	$(call checkfor,$(PYTHON2_CMD))
 	$(call checkfor,$(PYTHON3_CMD))
 	$(call checkfor,$(PIP_CMD))
+	$(call checkfor,$(PIP3_CMD))
 	$(call checkfor,$(TOX_CMD))
 	$(call checkfor,$(COVERAGE_CMD))
 	$(call checkfor,$(PYLINT_CMD))
+	$(call checkfor,$(PYENV_CMD))
 	$(call checkfor,$(GEM_CMD))
 	$(call checkfor,$(DANGER_CMD))
 	@$(DISPLAY_SEPARATOR)
@@ -132,9 +143,14 @@ check:
 # --- 
 
 pipinstall = @$(PIP) install $1 $(USER_FLAG)
-geminstall = @$(GEM) install $1 $(USER_FLAG)
+pipthreeinstall = @$(PIP3_CMD) install $1
+geminstall = @$(GEM) install $1
+brewinstall = @$(BREW) install $1
 
-install-deps: 
+pyenv_exec = @$(PYENV_CMD) $1 $2
+
+install-deps:
+	$(call brewinstall,$(PYENV_CMD))
 	$(call checkfor,$(PYTHON2_CMD))
 	$(call checkfor,$(PIP_CMD))
 	$(call pipinstall,$(COVERAGE_CMD))
@@ -142,12 +158,27 @@ install-deps:
 	$(call pipinstall,$(TOX_PYENV))
 	$(call pipinstall,$(CCTREPORTER_CMD))
 	$(call pipinstall,$(PYLINT_CMD))
+	$(call pipinstall,$(PYOBJC_CORE))
+	$(call pipinstall,$(PYOBJC_COCOA))
+	@$(DISPLAY_SEPARATOR)
+	$(call brewinstall,$(PYTHON3_CMD))
+	$(call checkfor,$(PIP3_CMD))
+	$(call pipthreeinstall,$(COVERAGE_CMD))
+	$(call pipthreeinstall,$(TOX_CMD))
+	$(call pipthreeinstall,$(TOX_PYENV))
+	$(call pipthreeinstall,$(CCTREPORTER_CMD))
+	$(call pipthreeinstall,$(PYLINT_CMD))
+	$(call pipthreeinstall,$(PYOBJC_CORE))
+	$(call pipthreeinstall,$(PYOBJC_COCOA))
 	@$(DISPLAY_SEPARATOR)
 	$(call checkfor,$(GEM_CMD))
 	$(call geminstall,$(DANGER_CMD))
 	@$(DISPLAY_SEPARATOR)
+	$(call pyenv_exec, install, 2.7.10)
+	$(call pyenv_exec, install, 3.5.1)
+	@$(DISPLAY_SEPARATOR)
 
-# --- 
+# ---
 
 # this is for installing any tools that we don't already have
 
@@ -176,6 +207,7 @@ clean: check
 	$(call cleanlocation, ., -name ".DS_Store")
 	$(call cleanlocation, ., -name "*.pyc")
 	$(call cleanlocation, ., -name "__pycache__" -type d)
+	$(call cleanlocation, ./tests/pbPlist-test-data -name "output.plist")
 	@$(PRINTF) "done!\n"
 	@$(DISPLAY_SEPARATOR)
 	
