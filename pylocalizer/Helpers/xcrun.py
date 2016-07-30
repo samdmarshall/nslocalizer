@@ -82,7 +82,7 @@ def ResolveDerivedDataPath(project):
 def ResolveBuildLocation(project, sym_root):
     build_dir_path = ''
     derived_data = ResolveDerivedDataPath(project)
-
+    # TODO: make this a switch statement
     location_style = CoreFoundation.CFPreferencesCopyAppValue('IDEBuildLocationStyle', 'com.apple.dt.Xcode') # pylint: disable=no-member
     if location_style == 'Unique':
         xcodeproj_path = os.path.join(project.projectRoot.obj_path, project.name)
@@ -130,6 +130,7 @@ def ProductsBuildLocation(project, sym_root):
 def resolvePathFromLocation(location_string, path, base_path):
     path_string = ''
     path_type, item_path = location_string.split(':')
+    # TODO: make this a switch statement
     if path_type == 'group':
         path = os.path.join(base_path, path)
         path_string = os.path.join(path, item_path)
