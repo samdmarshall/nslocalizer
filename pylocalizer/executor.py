@@ -28,14 +28,15 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__                                import print_function
+from __future__                                 import print_function
 import os
-from .Helpers.Logger                        import Logger
-from .xcodeproj.pbProj                        import pbProj
-from .xcodeproj.pbProj.PBXSourcesBuildPhase    import PBXSourcesBuildPhase
-from .xcodeproj.pbProj.PBXVariantGroup        import PBXVariantGroup
+from .Helpers.Logger                            import Logger
+from .xcodeproj.pbProj                          import pbProj
+from .xcodeproj.pbProj.PBXSourcesBuildPhase     import PBXSourcesBuildPhase
+from .xcodeproj.pbProj.PBXVariantGroup          import PBXVariantGroup
 
-def getLocalizationFiles(project, target):
+def getLocalizationFiles(project):
+    Logger.write().info('Filtering for Localizable.strings and Localizable.stringsdict files...')
     variant_groups = [pbx_object for pbx_object in project.pbx_objects if isinstance(pbx_object, PBXVariantGroup)]
 
     # localizable.strings
@@ -43,23 +44,28 @@ def getLocalizationFiles(project, target):
     if len(localizable_strings):
         localizable_strings = localizable_strings[0]
 
-#    # localizable.stringsdict
-#    localizable_stringsdict = [group for group in variant_groups if group.store[pbProj.PBX_Constants.kPBX_REFERENCE_name] == 'Localizable.stringsdict']
-#    if len(localizable_strings):
-#        localizable_stringsdict = localizable_stringsdict[0]
+    # localizable.stringsdict
+    localizable_stringsdict = [group for group in variant_groups if group.store[pbProj.PBX_Constants.kPBX_REFERENCE_name] == 'Localizable.stringsdict']
+    if len(localizable_stringsdict):
+        localizable_stringsdict = localizable_stringsdict[0]
 
-    language_file_refs = list()
+    Logger.write().info('Resolving language-specific file paths...')
+
+    strings_file_refs = list()
     languages = localizable_strings.store[pbProj.PBX_Constants.kPBX_REFERENCE_children]
     for language_file in languages:
         file_path = language_file.resolvePath(project)
         project_dir = os.path.dirname(os.path.dirname(project.pbx_file_path))
         file_path = os.path.join(project_dir, file_path)
         norm_file_path = os.path.normpath(file_path)
-        language_file_refs.append(norm_file_path)
+        strings_file_refs.append(norm_file_path)
 
-    return language_file_refs
+    stringsdict_file_refs = list()
+
+    return (strings_file_refs, stringsdict_file_refs)
 
 def getCodeFileList(project, target):
+    Logger.write().info('')
     build_phases = target.store[pbProj.PBX_Constants.kPBX_TARGET_buildPhases]
     source_phases = [build_phase for build_phase in build_phases if isinstance(build_phase, PBXSourcesBuildPhase)]
 
@@ -79,11 +85,17 @@ def getCodeFileList(project, target):
     return all_file_refs
 
 def findMissingStrings(project, target):
+    Logger.write().info('Finding strings that are missing from language files...')
     code_files = getCodeFileList(project.project_file, target)
-    localization_files = getLocalizationFiles(project.project_file, target)
-    
+    strings_files, stringsdict_files = getLocalizationFiles(project.project_file)
+    _ = target
+
+    return {}
 
 def findUnusedStrings(project, target):
+    Logger.write().info('Finding strings that are unused but are in language files...')
     code_files = getCodeFileList(project.project_file, target)
-    localization_files = getLocalizationFiles(project.project_file, target)
+    strings_files, stringsdict_files = getLocalizationFiles(project.project_file)
+    _ = target
 
+    return {}

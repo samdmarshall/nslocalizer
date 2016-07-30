@@ -51,22 +51,26 @@ def main(argv=sys.argv[1:]):
         '--project',
         metavar='<Xcode project path>',
         help='specify the path to the .xcodeproj file',
+        required=True,
         action='store'
     )
     parser.add_argument(
         '--target',
         metavar='<target name>',
         help='specify the name of the target to analyze',
+        required=True,
         action='store'
     )
     parser.add_argument(
         '--find-missing',
         help='look for localized strings that are missing from any of the .strings files',
+        default=False,
         action='store_true'
     )
     parser.add_argument(
         '--find-unused',
         help='look for localized strings that are not used in the code',
+        default=False,
         action='store_true'
     )
     parser.add_argument(
@@ -98,6 +102,7 @@ def main(argv=sys.argv[1:]):
         Logger.write().info('Cleaning all project caches...')
 
         # clean the cache
+        cache.cleanCache()
     else:
         has_set_flag = args.find_missing or args.find_unused
         can_run = args.project and args.target and has_set_flag
@@ -126,6 +131,7 @@ def main(argv=sys.argv[1:]):
                     unused_strings = executor.findUnusedStrings(xcodeproj_file, desired_target)
 
                 # write data to persitance store
+                cache.writeToCache((missing_strings, unused_strings))
 
                 # log data to xcode console
 

@@ -61,4 +61,5 @@ class PBSerializer(object):
             file_descriptor.write('// !$*'+self.string_encoding+'*$!\n')
         if obj is not None:
             write_string, indent_level = obj.writeString()
+            _ = indent_level
             file_descriptor.write(write_string)

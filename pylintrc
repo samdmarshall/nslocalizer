@@ -151,16 +151,16 @@ inlinevar-rgx=[A-Za-z_][A-Za-z0-9_]*$
 inlinevar-name-hint=[A-Za-z_][A-Za-z0-9_]*$
 
 # Regular expression matching correct class names
-class-rgx=[a-zA-Z0-9]+$
+class-rgx=[a-zA-Z0-9_]+$
 
 # Naming hint for class names
-class-name-hint=[a-zA-Z0-9]+$
+class-name-hint=[a-zA-Z0-9_]+$
 
 # Regular expression matching correct module names
-module-rgx=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
+module-rgx=(([a-z_][a-z0-9_]*)|([A-Za-z][a-zA-Z0-9_]+))$
 
 # Naming hint for module names
-module-name-hint=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
+module-name-hint=(([a-z_][a-z0-9_]*)|([A-Za-z][a-zA-Z0-9]+))$
 
 # Regular expression matching correct method names
 method-rgx=[a-z_][a-zA-Z0-9_]{2,40}$
@@ -231,7 +231,7 @@ notes=FIXME,XXX,TODO
 [SIMILARITIES]
 
 # Minimum lines number of a similarity.
-min-similarity-lines=4
+min-similarity-lines=10
 
 # Ignore comments when computing similarities.
 ignore-comments=yes
@@ -240,7 +240,7 @@ ignore-comments=yes
 ignore-docstrings=yes
 
 # Ignore imports when computing similarities.
-ignore-imports=no
+ignore-imports=yes
 
 
 [SPELLING]

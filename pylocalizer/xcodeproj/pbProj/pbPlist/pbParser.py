@@ -28,11 +28,12 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__    import print_function
+from __future__            import print_function
 import sys
-from .             import StrParse
-from .             import pbRoot
-from .             import pbItem
+from .                     import StrParse
+from .                     import pbRoot
+from .                     import pbItem
+from ....Helpers.Switch    import Switch
 
 class PBParser(object):
 
@@ -94,26 +95,33 @@ class PBParser(object):
     def __parse(self, requires_object=True):
         parsed_item = None
         starting_character = self.data[self.index]
-        # TODO: replace with switch statement
-        if starting_character == '{':
-            # parse dictionary
-            parsed_item = pbItem.pbItemResolver(self.__parseDict(), 'dictionary') # pylint: disable=redefined-variable-type
-        elif starting_character == '(':
-            # parse array
-            parsed_item = pbItem.pbItemResolver(self.__parseArray(), 'array') # pylint: disable=redefined-variable-type
-        elif starting_character == '<':
-            # parse data
-            parsed_item = pbItem.pbItemResolver(self.__parseData(), 'data') # pylint: disable=redefined-variable-type
-        elif starting_character == '\'' or starting_character == '\"':
-            # parse quoted string
-            parsed_item = pbItem.pbItemResolver(self.__parseQuotedString(), 'qstring') # pylint: disable=redefined-variable-type
-        elif StrParse.IsValidUnquotedStringCharacter(starting_character) is True:
-            # parse unquoted string
-            parsed_item = pbItem.pbItemResolver(self.__parseUnquotedString(), 'string') # pylint: disable=redefined-variable-type
-        else:
-            if requires_object is True: # pragma: no cover
-                message = 'Unexpected character "0x'+str(format(ord(starting_character), 'x'))+'" at line '+str(StrParse.LineNumberForIndex(self.data, self.index))
-                raise Exception(message)
+        for case in Switch(starting_character):
+            if case('{'):
+                # parse dictionary
+                parsed_item = pbItem.pbItemResolver(self.__parseDict(), 'dictionary') # pylint: disable=redefined-variable-type
+                break
+            if case('('):
+                # parse array
+                parsed_item = pbItem.pbItemResolver(self.__parseArray(), 'array') # pylint: disable=redefined-variable-type
+                break
+            if case('<'):
+                # parse data
+                parsed_item = pbItem.pbItemResolver(self.__parseData(), 'data') # pylint: disable=redefined-variable-type
+                break
+            if case('\''):
+                pass
+            if case('\"'):
+                # parse quoted string
+                parsed_item = pbItem.pbItemResolver(self.__parseQuotedString(), 'qstring') # pylint: disable=redefined-variable-type
+                break
+            if case():
+                if StrParse.IsValidUnquotedStringCharacter(starting_character) is True:
+                    # parse unquoted string
+                    parsed_item = pbItem.pbItemResolver(self.__parseUnquotedString(), 'string') # pylint: disable=redefined-variable-type
+                else:
+                    if requires_object is True: # pragma: no cover
+                        message = 'Unexpected character "0x'+str(format(ord(starting_character), 'x'))+'" at line '+str(StrParse.LineNumberForIndex(self.data, self.index))
+                        raise Exception(message)
         return parsed_item
 
     def __parseUnquotedString(self):
@@ -211,17 +219,20 @@ class PBParser(object):
             key_object = new_object
             current_char = self.data[self.index]
             value_object = None
-            if current_char == '=':
-                self.index += 1
-                value_object = self.__readTest(True)
-            elif current_char == ';':
-                # this is for strings files where the key and the value may be the same thing
-                self.index += 1
-                value_object = pbItem.pbItemResolver(new_object.value, new_object.type_name)
-                value_object.annotation = new_object.annotation
-            else: # pragma: no cover
-                message = 'Missing ";" or "=" on line '+str(StrParse.LineNumberForIndex(self.data, self.index))
-                raise Exception(message)
+            for case in Switch(current_char):
+                if case('='):
+                    self.index += 1
+                    value_object = self.__readTest(True)
+                    break
+                if case(';'):
+                    # this is for strings files where the key and the value may be the same thing
+                    self.index += 1
+                    value_object = pbItem.pbItemResolver(new_object.value, new_object.type_name)
+                    value_object.annotation = new_object.annotation
+                    break
+                if case(): # pragma: no cover
+                    message = 'Missing ";" or "=" on line '+str(StrParse.LineNumberForIndex(self.data, self.index))
+                    raise Exception(message)
             can_parse, self.index, annotation = StrParse.IndexOfNextNonSpace(self.data, self.index)
             _can_parse = can_parse # pylint: disable=unused-variable
             if value_object.annotation is None: # this is to prevent losing the annotation of the key when parsing strings dicts

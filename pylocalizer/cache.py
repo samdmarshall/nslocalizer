@@ -30,3 +30,14 @@
 
 from __future__       import print_function
 from .Helpers.Logger  import Logger
+
+def writeToCache(all_warnings):
+    Logger.write().info('Writing to cache...')
+    for warning in all_warnings:
+        print(warning)
+
+def cleanCache():
+    Logger.write().info('Emptying cache...')
+
+    Logger.write().info('Cache removed!')
+ 

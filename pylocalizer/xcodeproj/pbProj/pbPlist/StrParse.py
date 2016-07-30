@@ -173,6 +173,7 @@ def IsHexNumber(character):
     return set(character).issubset(hex_digits)
 
 def SanitizeCharacter(character):
+    char = character
     escaped_characters = {
         '\a': '\\a',
         '\b': '\\b',
@@ -184,17 +185,17 @@ def SanitizeCharacter(character):
         '\"': '\\"',
     }
     if character in escaped_characters.keys():
-        return escaped_characters[character]
-    else:
-        return character
+        char = escaped_characters[character]
+    return char
 
-def UnQuotifyString(string_data, start_index, end_index): # http://www.opensource.apple.com/source/CF/CF-744.19/CFOldStylePList.c See `getSlashedChar()`
+# http://www.opensource.apple.com/source/CF/CF-744.19/CFOldStylePList.c See `getSlashedChar()`
+def UnQuotifyString(string_data, start_index, end_index): # pylint: disable=too-many-locals,too-many-branches,too-many-statements
     formatted_string = ''
     extracted_string = string_data[start_index:end_index]
     string_length = len(extracted_string)
     all_cases = ['0', '1', '2', '3', '4', '5', '6', '7', 'a', 'b', 'f', 'n', 'r', 't', 'v', '\"', '\n', 'U']
     index = 0
-    while index < string_length:
+    while index < string_length: # pylint: disable=too-many-nested-blocks
         current_char = extracted_string[index]
         if current_char == '\\':
             next_char = extracted_string[index+1]
@@ -299,12 +300,12 @@ def IsEndOfLine(character):
     result = (IsNewline(character) or IsUnicodeSeparator(character))
     return result
 
-def IndexOfNextNonSpace(string_data, current_index):
+def IndexOfNextNonSpace(string_data, current_index): # pylint: disable=too-many-branches,too-many-statements
     successful = False
     found_index = current_index
     string_length = len(string_data)
     annotation_string = ''
-    while found_index < string_length:
+    while found_index < string_length: # pylint: disable=too-many-nested-blocks
         current_char = string_data[found_index]
         if IsSpecialWhitespace(current_char) is True:
             found_index += 1

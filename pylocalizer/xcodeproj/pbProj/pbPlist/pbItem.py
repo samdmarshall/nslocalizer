@@ -102,7 +102,7 @@ class pbItem(object):
     def writeStringRep(self, indent_level=0, pretty=True):
         return self.writeString(indent_level, pretty)
 
-    def writeString(self, indent_level=0, pretty=True): # pylint: disable=no-self-use,unused-variable ; # pragma: no cover
+    def writeString(self, indent_level=0, pretty=True): # pylint: disable=no-self-use,unused-variable,unused-argument ; # pragma: no cover
         message = 'This is a base class, it cannot write!'
         raise Exception(message)
 

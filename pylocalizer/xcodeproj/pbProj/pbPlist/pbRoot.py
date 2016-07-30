@@ -28,9 +28,9 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from functools import cmp_to_key
 import collections
 from .         import pbItem
-from functools import cmp_to_key
 
 def StringCmp(obj1, obj2):
     result = -1
@@ -57,9 +57,9 @@ class pbRoot(collections.MutableMapping):
         self.key_storage = list()
         self.update(dict(*args, **kwargs))  # use the free update to set keys
 
-    def __internalKeyCheck(self, key):
+    def __internalKeyCheck(self, key): # pylint: disable=no-self-use
         safe_key = key
-        if type(safe_key) is str:
+        if isinstance(safe_key, str):
             safe_key = pbItem.pbItemResolver(safe_key, 'qstring')
         return safe_key
 
@@ -91,7 +91,7 @@ class pbRoot(collections.MutableMapping):
     def __getattr__(self, attrib):
         return getattr(self.store, attrib)
 
-    def __keytransform__(self, key):
+    def __keytransform__(self, key): # pylint: disable=no-self-use
         result = key
         if isinstance(key, pbItem.pbItem):
             result = key.value
@@ -102,7 +102,7 @@ class pbRoot(collections.MutableMapping):
         sorted_keys = sorted(unsorted_keys, key=cmp_to_key(KeySorter))
         can_sort = False
         if len(sorted_keys) > 0:
-            all_dictionaries = all((type(self[key].value) is dict or type(self[key].value) is pbRoot) for key in unsorted_keys)
+            all_dictionaries = all((isinstance(self[key].value, dict) or isinstance(self[key].value, pbRoot)) for key in unsorted_keys)
             if all_dictionaries:
                 can_sort = all(self[key].get('isa', None) is not None for key in unsorted_keys)
                 if can_sort:

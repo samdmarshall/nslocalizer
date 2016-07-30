@@ -121,6 +121,7 @@ class PBX_Base_Phase(PBXItem):
         self.resolveGraphNodesForArray(PBX_Constants.kPBX_PHASE_files, project)
 
 def resolvePathTypeFromSource(source):
+    result = None
     lookup = {
         '<absolute>': 'resolveAbsolutePath',
         '<group>': 'resolveGroupPath',
@@ -130,8 +131,8 @@ def resolvePathTypeFromSource(source):
         'SDKROOT': 'resolveSDKPath'
     }
     if source in list(lookup.keys()):
-        return lookup[source]
-      
+        result = lookup[source]
+    return result
 
 class PBX_Base_Reference(PBXItem):
     def __init__(self, identifier, dictionary):
@@ -140,14 +141,17 @@ class PBX_Base_Reference(PBXItem):
         super(PBX_Base_Reference, self).resolveGraph(project)
     def findParent(self, project):
         parent = None
-        results = filter(lambda pbxref: isinstance(pbxref, PBX_Base_Reference) and PBX_Constants.kPBX_REFERENCE_children in pbxref.keys(), project.pbx_objects)
+        results = list()
+        for pbx_object in project.pbx_objects:
+            if isinstance(pbx_object, PBX_Base_Reference) and PBX_Constants.kPBX_REFERENCE_children in list(pbx_object.keys()):
+                results.append(pbx_object)
         for item in results:
-            child_results = list(filter(lambda ref: self.identifier == ref.identifier, item[PBX_Constants.kPBX_REFERENCE_children]))
+            child_results = [ref for ref in item[PBX_Constants.kPBX_REFERENCE_children] if self.identifier == ref.identifier]
             if len(child_results) > 0:
                 parent = item
                 break
         return parent
-    def resolveAbsolutePath(self, project):
+    def resolveAbsolutePath(self, project): # pylint: disable=no-self-use,unused-argument
         return ''
     def resolveGroupPath(self, project):
         file_path = ''
