@@ -34,6 +34,5 @@ from . import pylocalizer_test
 
 if __name__ == '__main__':
     testsuite = unittest.TestLoader()
-    testsuite.addTest(pbPlist_test.pbPlistTestCases)
     testsuite.addTest(pylocalizer_test.pylocalizerTestCases)
     unittest.TextTestRunner(verbosity=1).run(testsuite)
