@@ -114,7 +114,7 @@ def ResolveBuildLocation(project, sym_root):
             # this is missing the configuration path
             build_dir_path = os.path.join(project.projectRoot.obj_path, sym_root)
             break
-        if case():
+        if case(): # pragma: no cover
             break
     return build_dir_path
 
@@ -155,7 +155,7 @@ def resolvePathFromLocation(location_string, path, base_path):
         if case('container'):
             path_string = os.path.join(base_path, item_path)
             break
-        if case():
+        if case(): # pragma: no cover
             Logger.write().error('[xcrun]: Invalid item path name!')
             path_string = item_path
             break
@@ -178,14 +178,14 @@ def make_subprocess_call(call_args, shell_state=False):
     try:
         output = subprocess.check_output(call_args, shell=shell_state)
         error = 0
-    except subprocess.CalledProcessError as exception:
+    except subprocess.CalledProcessError as exception: # pragma: no cover
         output = str(exception.output)
         error = exception.returncode
     return (output, error)
 
 def make_xcrun_with_args(args_tuple):
     xcrun_result = make_subprocess_call((('xcrun',) + args_tuple))
-    if xcrun_result[1] != 0:
+    if xcrun_result[1] != 0: # pragma: no cover
         Logger.write().error('[xcrun]: Error in exec!')
         sys.exit()
     xcrun_output = str(xcrun_result[0]).rstrip('\n')
@@ -196,7 +196,7 @@ def resolve_sdk_path(sdk_name):
 
 def resolve_developer_path():
     xcrun_result = make_subprocess_call(('xcode-select', '-p'))
-    if xcrun_result[1] != 0:
+    if xcrun_result[1] != 0: # pragma: no cover
         Logger.write().error('[xcrun]: Please run Xcode first!')
         sys.exit()
     developer_path = str(xcrun_result[0]).rstrip('\n')

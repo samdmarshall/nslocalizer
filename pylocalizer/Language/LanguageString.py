@@ -36,7 +36,7 @@ class LanguageString(object):
         self.base = None
         self.mapping = dict()
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str: # pragma: no cover
         return str(self.string)
 
     def processMapping(self, base_locale, additional_locales) -> (object, list):

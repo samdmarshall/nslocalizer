@@ -57,7 +57,7 @@ def GetFileEncoding(path) -> str:
                 encoding = 'utf-16-be'
                 break
             if case():
-                break
+                break # pragma: no cover
 
     return encoding
 

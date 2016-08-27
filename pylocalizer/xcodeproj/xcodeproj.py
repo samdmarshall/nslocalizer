@@ -42,11 +42,11 @@ class xcodeproj(object):
                 pbxproj_file_path = os.path.join(self.file_path, 'project.pbxproj')
                 if os.path.exists(pbxproj_file_path):
                     self.project_file = pbProj.PBXProj(pbxproj_file_path)
-                else:
+                else: # pragma: no cover
                     Logger.write().error('Could not find the pbxproj file!')
-            else:
+            else: # pragma: no cover
                 Logger.write().error('Not a Xcode project file!')
-        else:
+        else: # pragma: no cover
             Logger.write().error('Could not find the Xcode project file!')
 
     def projects(self):

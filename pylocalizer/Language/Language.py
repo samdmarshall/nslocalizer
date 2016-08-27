@@ -62,5 +62,5 @@ class Language(object):
         if self.stringsdict_file is not None:
             self.stringsdict = self.loadStrings(self.stringsdict_file)
 
-    def __repr__(self):
+    def __repr__(self): # pragma: no cover
         return '<%s : %s>' % (type(self).__name__, self.name)

@@ -28,9 +28,10 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from ..Helpers.Logger               import Logger
-from ..xcodeproj.pbProj             import pbProj
-from ..xcodeproj.pbProj             import PBXSourcesBuildPhase
+from ..Helpers.Logger                           import Logger
+from ..xcodeproj.pbProj                         import pbProj
+from ..xcodeproj.pbProj.PBXSourcesBuildPhase    import PBXSourcesBuildPhase
+from .                                          import PathFinder
 
 def getCodeFileList(project, target) -> list:
     Logger.write().info('Finding Code files for target "%s"...' % target[pbProj.PBX_Constants.kPBX_TARGET_name])
@@ -41,6 +42,6 @@ def getCodeFileList(project, target) -> list:
     for phase in source_phases:
         all_build_files.extend(phase.store[pbProj.PBX_Constants.kPBX_PHASE_files])
 
-    all_file_refs = [resolveFilePathForReference(project, build_file.store[pbProj.PBX_Constants.kPBX_BUILDFILE_fileRef]) for build_file in all_build_files]
+    all_file_refs = [PathFinder.resolveFilePathForReference(project, build_file.store[pbProj.PBX_Constants.kPBX_BUILDFILE_fileRef]) for build_file in all_build_files]
 
     return all_file_refs

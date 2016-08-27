@@ -60,30 +60,30 @@ class Executor(object):
             if len(desired_target):
                 desired_target = desired_target[0]
             else:
-                desired_target = None
+                desired_target = None # pragma: no cover
         else:
-            Logger.write().error('Please specify a project (--project) with a valid target (--target), and at least one search flag (--find-unused, --find-missing).')
+            Logger.write().error('Please specify a project (--project) with a valid target (--target), and at least one search flag (--find-unused, --find-missing).') # pragma: no cover
 
         if xcodeproj is not None and desired_target is not None:
-                missing_strings = dict()
-                unused_strings = dict()
+            missing_strings = dict()
+            unused_strings = dict()
 
-                if arguments.find_missing:
-                    missing_strings = findMissingStrings(xcodeproj_file, desired_target)
-                    # log data to xcode console
-                    Reporter.logWarnings(missing_strings, arguments.ignore)
+            if arguments.find_missing:
+                missing_strings = findMissingStrings(xcodeproj_file, desired_target)
+                # log data to xcode console
+                Reporter.logWarnings(missing_strings, arguments.ignore)
 
-                if arguments.find_unused:
-                    unused_strings = findUnusedStrings(xcodeproj_file, desired_target)
-                    # log data to xcode console
-                    Reporter.logWarnings(unused_strings, arguments.ignore)
+            if arguments.find_unused:
+                unused_strings = findUnusedStrings(xcodeproj_file, desired_target)
+                # log data to xcode console
+                Reporter.logWarnings(unused_strings, arguments.ignore)
 
-                # write data to persitance store
-                Cache.writeToCache((missing_strings, unused_strings))
+            # write data to persitance store
+            Cache.writeToCache((missing_strings, unused_strings))
 
-                # close up files
+            # close up files
         else:
-            Logger.write().info('Could not find target "%s" in the specified project file.' % arguments.target)
+            Logger.write().info('Could not find target "%s" in the specified project file.' % arguments.target) # pragma: no cover
 
 def generateLanguages(project) -> set:
     strings_files, stringsdict_files = LanguageFinder.getLocalizationFiles(project.project_file)
