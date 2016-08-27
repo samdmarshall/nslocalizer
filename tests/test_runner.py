@@ -29,7 +29,6 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import unittest
-from . import pbPlist_test
 from . import pylocalizer_test
 
 if __name__ == '__main__':
