@@ -28,43 +28,19 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup
-import sys
+from ..Helpers.Logger               import Logger
+from ..xcodeproj.pbProj             import pbProj
+from ..xcodeproj.pbProj             import PBXSourcesBuildPhase
 
-if sys.version_info < (3,0):
-    print('This tool requires at least Python 3.0. Please run `brew install python3` first.')
-    sys.exit()
+def getCodeFileList(project, target) -> list:
+    Logger.write().info('Finding Code files for target "%s"...' % target[pbProj.PBX_Constants.kPBX_TARGET_name])
+    build_phases = target.store[pbProj.PBX_Constants.kPBX_TARGET_buildPhases]
+    source_phases = [build_phase for build_phase in build_phases if isinstance(build_phase, PBXSourcesBuildPhase)]
 
-setup(
-    name = 'pylocalizer',
-    version = '0.1',
-    description = 'Tool for finding missing and unused NSLocalizdStrings',
-    url = 'https://github.com/samdmarshall/pylocalizer',
-    author = 'Samantha Marshall',
-    author_email = 'hello@pewpewthespells.com',
-    license = 'BSD 3-Clause',
-    packages = [
-        'pylocalizer',
-        'pylocalizer/Helpers',
-        'pylocalizer/xcodeproj',
-        'pylocalizer/xcodeproj/pbProj',
-        'pylocalizer/xcodeproj/pbProj/pbPlist',
-        'pylocalizer/Language',
-        'pylocalizer/Executor',
-        'pylocalizer/Finder',
-        'pylocalizer/Reporter',
-        'pylocalizer/Cache',
-        
-    ],
-    entry_points = {
-        'console_scripts': [ 'pylocalizer = pylocalizer:main' ]
-    },
-    test_suite = 'tests',
-    zip_safe = False,
-    install_requires = [
-        'pyobjc-core',
-        'pyobjc-framework-Cocoa',
-        'biplist',
-        'langcodes',
-    ]
-)
+    all_build_files = list()
+    for phase in source_phases:
+        all_build_files.extend(phase.store[pbProj.PBX_Constants.kPBX_PHASE_files])
+
+    all_file_refs = [resolveFilePathForReference(project, build_file.store[pbProj.PBX_Constants.kPBX_BUILDFILE_fileRef]) for build_file in all_build_files]
+
+    return all_file_refs

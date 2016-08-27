@@ -28,43 +28,20 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup
-import sys
+class LanguageString(object):
+    def __init__(self, string_key, string_value):
+        self.line_number = 0
+        self.string = string_key
+        self.value = string_value
+        self.base = None
+        self.mapping = dict()
 
-if sys.version_info < (3,0):
-    print('This tool requires at least Python 3.0. Please run `brew install python3` first.')
-    sys.exit()
+    def __repr__(self) -> str:
+        return str(self.string)
 
-setup(
-    name = 'pylocalizer',
-    version = '0.1',
-    description = 'Tool for finding missing and unused NSLocalizdStrings',
-    url = 'https://github.com/samdmarshall/pylocalizer',
-    author = 'Samantha Marshall',
-    author_email = 'hello@pewpewthespells.com',
-    license = 'BSD 3-Clause',
-    packages = [
-        'pylocalizer',
-        'pylocalizer/Helpers',
-        'pylocalizer/xcodeproj',
-        'pylocalizer/xcodeproj/pbProj',
-        'pylocalizer/xcodeproj/pbProj/pbPlist',
-        'pylocalizer/Language',
-        'pylocalizer/Executor',
-        'pylocalizer/Finder',
-        'pylocalizer/Reporter',
-        'pylocalizer/Cache',
-        
-    ],
-    entry_points = {
-        'console_scripts': [ 'pylocalizer = pylocalizer:main' ]
-    },
-    test_suite = 'tests',
-    zip_safe = False,
-    install_requires = [
-        'pyobjc-core',
-        'pyobjc-framework-Cocoa',
-        'biplist',
-        'langcodes',
-    ]
-)
+    def processMapping(self, base_locale, additional_locales) -> (object, list):
+        self.base = base_locale
+        results = [(locale, self.string in locale.strings) for locale in additional_locales]
+        self.mapping = dict(results)
+        missing_keys = [key for key in self.mapping if self.mapping[key] is False]
+        return (self, missing_keys)

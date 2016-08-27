@@ -222,9 +222,7 @@ class pbDictionary(pbItem):
 
 class pbArray(pbItem):
     def nativeType(self):
-        new_value = list()
-        for item in self.value:
-            new_value.append(item.nativeType())
+        new_value = [item.nativeType() for item in self.value]
         return new_value
     def writeString(self, indent_level=0, pretty=True):
         array_string = ''

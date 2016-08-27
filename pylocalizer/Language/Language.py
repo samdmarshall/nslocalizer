@@ -28,43 +28,39 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup
-import sys
+import os
+import langcodes
+from ..xcodeproj.pbProj.pbPlist     import pbPlist
+from .LanguageString                import LanguageString
 
-if sys.version_info < (3,0):
-    print('This tool requires at least Python 3.0. Please run `brew install python3` first.')
-    sys.exit()
+def GetLanguageCodeFromPath(path) -> str:
+    dirname = os.path.dirname(path)
+    basename = os.path.basename(dirname)
+    locale, _ = os.path.splitext(basename)
+    return locale
 
-setup(
-    name = 'pylocalizer',
-    version = '0.1',
-    description = 'Tool for finding missing and unused NSLocalizdStrings',
-    url = 'https://github.com/samdmarshall/pylocalizer',
-    author = 'Samantha Marshall',
-    author_email = 'hello@pewpewthespells.com',
-    license = 'BSD 3-Clause',
-    packages = [
-        'pylocalizer',
-        'pylocalizer/Helpers',
-        'pylocalizer/xcodeproj',
-        'pylocalizer/xcodeproj/pbProj',
-        'pylocalizer/xcodeproj/pbProj/pbPlist',
-        'pylocalizer/Language',
-        'pylocalizer/Executor',
-        'pylocalizer/Finder',
-        'pylocalizer/Reporter',
-        'pylocalizer/Cache',
-        
-    ],
-    entry_points = {
-        'console_scripts': [ 'pylocalizer = pylocalizer:main' ]
-    },
-    test_suite = 'tests',
-    zip_safe = False,
-    install_requires = [
-        'pyobjc-core',
-        'pyobjc-framework-Cocoa',
-        'biplist',
-        'langcodes',
-    ]
-)
+class Language(object):
+    def __init__(self, strings_file_path):
+        self.code = GetLanguageCodeFromPath(strings_file_path)
+        self.name = langcodes.LanguageData(language=self.code).language_name()
+        self.strings_file = strings_file_path
+        self.stringsdict_file = None
+        self.stringsdict = None
+        self.strings = self.loadStrings(self.strings_file)
+
+    def loadStrings(self, file_path) -> list:
+        strings_file_contents = pbPlist.PBPlist(self.strings_file)
+        results = [LanguageString(localized_string_key, strings_file_contents.root[localized_string_key]) for localized_string_key in list(strings_file_contents.root.keys())]
+        return results
+
+    def loadStringsDictFile(self, stringsdict_file_array) -> None:
+        for stringsdict_file in stringsdict_file_array:
+            dict_locale = GetLanguageCodeFromPath(stringsdict_file)
+            if self.code == dict_locale:
+                self.stringsdict_file = stringsdict_file
+                break
+        if self.stringsdict_file is not None:
+            self.stringsdict = self.loadStrings(self.stringsdict_file)
+
+    def __repr__(self):
+        return '<%s : %s>' % (type(self).__name__, self.name)

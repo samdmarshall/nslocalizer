@@ -2,30 +2,30 @@
 # All rights reserved.
 #
 # https://github.com/samdmarshall/pylocalizer
-# 
-# Redistribution and use in source and binary forms, with or without modification, 
+#
+# Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
-# 
-# 1. Redistributions of source code must retain the above copyright notice, this 
+#
+# 1. Redistributions of source code must retain the above copyright notice, this
 # list of conditions and the following disclaimer.
-# 
-# 2. Redistributions in binary form must reproduce the above copyright notice, 
+#
+# 2. Redistributions in binary form must reproduce the above copyright notice,
 # this list of conditions and the following disclaimer in the documentation and/or
 # other materials provided with the distribution.
-# 
-# 3. Neither the name of Samantha Marshall nor the names of its contributors may 
-# be used to endorse or promote products derived from this software without 
+#
+# 3. Neither the name of Samantha Marshall nor the names of its contributors may
+# be used to endorse or promote products derived from this software without
 # specific prior written permission.
-# 
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-# IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-# INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
-# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+# INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Variables
@@ -38,7 +38,6 @@ INSTALLED_FILES_RECORD := ./installed_files.txt
 
 # names of the executables that are used as a part of this project
 
-PYTHON2_CMD := python
 PYTHON3_CMD := python3
 TOX_CMD := tox
 COVERAGE_CMD := coverage
@@ -67,9 +66,9 @@ TOX_PYENV := tox-pyenv
 PYOBJC_CORE := pyobjc-core
 PYOBJC_COCOA := pyobjc-framework-Cocoa
 
+
 # invoke the specific executable command
 
-PYTHON2 = $(shell command -v $(PYTHON2_CMD) 2> /dev/null)
 PYTHON3 = $(shell command -v $(PYTHON3_CMD) 2> /dev/null)
 TOX = $(shell command -v $(TOX_CMD) 2> /dev/null)
 COVERAGE = $(shell command -v $(COVERAGE_CMD) 2> /dev/null)
@@ -98,7 +97,7 @@ SYSTEM := $(shell $(UNAME) -s)
 ifeq ($(SYSTEM),Darwin)
 	USER_FLAG := --user
 else
-	USER_FLAG := 
+	USER_FLAG :=
 endif
 
 TERM_COLUMNS := `$(TPUT) cols`
@@ -106,7 +105,7 @@ DISPLAY_SEPARATOR := $(PRINTF) "%*.s\n" $(TERM_COLUMNS) " " | $(TR) ' ' '='
 
 # Targets
 
-# --- 
+# ---
 
 checkfor = @$(PRINTF) "Checking for $1..."; \
 if [ -z `$(WHICH) $1` ]; then \
@@ -128,9 +127,7 @@ check:
 	$(call checkfor,$(XARGS_CMD))
 	$(call checkfor,$(RM_CMD))
 	$(call checkfor,$(BREW_CMD))
-	$(call checkfor,$(PYTHON2_CMD))
 	$(call checkfor,$(PYTHON3_CMD))
-	$(call checkfor,$(PIP_CMD))
 	$(call checkfor,$(PIP3_CMD))
 	$(call checkfor,$(TOX_CMD))
 	$(call checkfor,$(COVERAGE_CMD))
@@ -140,7 +137,7 @@ check:
 	$(call checkfor,$(DANGER_CMD))
 	@$(DISPLAY_SEPARATOR)
 
-# --- 
+# ---
 
 pipinstall = @$(PIP) install $1 $(USER_FLAG)
 pipthreeinstall = @$(PIP3_CMD) install $1
@@ -151,32 +148,20 @@ pyenv_exec = @$(PYENV_CMD) $1 $2
 
 install-deps:
 	$(call brewinstall,$(PYENV_CMD))
-	$(call checkfor,$(PYTHON2_CMD))
-	$(call checkfor,$(PIP_CMD))
-	$(call pipinstall,$(COVERAGE_CMD))
-	$(call pipinstall,$(TOX_CMD))
-	$(call pipinstall,$(TOX_PYENV))
-	$(call pipinstall,$(CCTREPORTER_CMD))
-	$(call pipinstall,$(PYLINT_CMD))
-	$(call pipinstall,$(PYOBJC_CORE))
-	$(call pipinstall,$(PYOBJC_COCOA))
-	@$(DISPLAY_SEPARATOR)
 	$(call brewinstall,$(PYTHON3_CMD))
 	$(call checkfor,$(PIP3_CMD))
-	$(call pipthreeinstall,$(COVERAGE_CMD))
-	$(call pipthreeinstall,$(TOX_CMD))
-	$(call pipthreeinstall,$(TOX_PYENV))
-	$(call pipthreeinstall,$(CCTREPORTER_CMD))
-	$(call pipthreeinstall,$(PYLINT_CMD))
-	$(call pipthreeinstall,$(PYOBJC_CORE))
-	$(call pipthreeinstall,$(PYOBJC_COCOA))
+	$(call pipthreeinstall,-r requirements.txt)
 	@$(DISPLAY_SEPARATOR)
 	$(call checkfor,$(GEM_CMD))
 	$(call geminstall,$(DANGER_CMD))
 	@$(DISPLAY_SEPARATOR)
-	$(call pyenv_exec, install, 2.7.10)
 	$(call pyenv_exec, install, 3.5.1)
 	@$(DISPLAY_SEPARATOR)
+
+# ---
+
+profile: check
+	$(PYTHON3) -m cProfile pylocalizer.py --project ~/Work/iRobot/aspen.home/ios/aspen.xcodeproj --target aspen --find-missing --find-unused --verbose
 
 # ---
 
@@ -188,7 +173,7 @@ install-tools: check
 	@$(PRINTF) " done!\n"
 	@$(DISPLAY_SEPARATOR)
 
-# --- 
+# ---
 
 removeall = $(RM) -rRf
 cleanlocation = @$(FIND) $1 $2 -print0 | $(XARGS) -0 $(removeall)
@@ -211,25 +196,20 @@ clean: check
 	@$(PRINTF) "done!\n"
 	@$(DISPLAY_SEPARATOR)
 	
-# --- 
-
-build2: clean
-	$(PYTHON2) ./setup.py install $(USER_FLAG) --record $(INSTALLED_FILES_RECORD)
-	@$(DISPLAY_SEPARATOR)
 	
-# --- 
+# ---
 
-build3: clean
+build: clean
 	$(PYTHON3) ./setup.py install --record $(INSTALLED_FILES_RECORD)
 	@$(DISPLAY_SEPARATOR)
 
-# --- 
+# ---
 
 test: clean
 	$(TOX)
 	@$(DISPLAY_SEPARATOR)
 
-# --- 
+# ---
 
 upload_artifacts = @$(PRINTF) "Checking for path to upload artifacts..." ; \
 if [ -d $1 ] ; then \
@@ -273,7 +253,7 @@ endif
 	$(call run_cctreporter)
 	@$(DISPLAY_SEPARATOR)
 
-# --- 
+# ---
 
 danger: check
 	@$(PRINTF) "Running danger "
@@ -287,7 +267,7 @@ else
 endif
 	@$(DISPLAY_SEPARATOR)
 	
-# --- 
+# ---
 
 ci: test lint report danger
 
@@ -303,4 +283,4 @@ lint: check
 
 # ---
 
-.PHONY: danger lint ci report test build3 build2 clean install-tools install-deps check
+.PHONY: danger lint ci report test build clean install-tools install-deps check profile

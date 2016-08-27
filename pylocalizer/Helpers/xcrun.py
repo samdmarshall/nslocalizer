@@ -30,12 +30,12 @@
 
 import os
 import sys
-import subprocess
-import hashlib
-#import tempfile
 import struct
+import hashlib
+import subprocess
 import CoreFoundation
 from .Logger    import Logger
+from .Switch    import Switch
 
 def hashStringForPath(path):
     """
@@ -82,29 +82,40 @@ def ResolveDerivedDataPath(project):
 def ResolveBuildLocation(project, sym_root):
     build_dir_path = ''
     derived_data = ResolveDerivedDataPath(project)
-    # TODO: make this a switch statement
     location_style = CoreFoundation.CFPreferencesCopyAppValue('IDEBuildLocationStyle', 'com.apple.dt.Xcode') # pylint: disable=no-member
-    if location_style == 'Unique':
-        xcodeproj_path = os.path.join(project.projectRoot.obj_path, project.name)
-        unique_path = hashStringForPath(xcodeproj_path)
-        # this is missing the configuration path.
-        project_dir_name = os.path.splitext(project.name)[0]+'-'+unique_path+'/Build/Products/'
-        build_dir_path = os.path.join(derived_data, project_dir_name)
-    elif location_style == 'Shared':
-        shared_path = CoreFoundation.CFPreferencesCopyAppValue('IDESharedBuildFolderName', 'com.apple.dt.Xcode') # pylint: disable=no-member
-        build_dir_path = os.path.join(derived_data, shared_path)
-    elif location_style == 'Custom':
-        location_type = CoreFoundation.CFPreferencesCopyAppValue('IDECustomBuildLocationType', 'com.apple.dt.Xcode') # pylint: disable=no-member
-        custom_path = CoreFoundation.CFPreferencesCopyAppValue('IDECustomBuildProductsPath', 'com.apple.dt.Xcode') # pylint: disable=no-member
-        if location_type == 'RelativeToDerivedData':
-            build_dir_path = os.path.join(derived_data, custom_path)
-        elif location_type == 'RelativeToWorkspace':
-            build_dir_path = os.path.join(project.path.base_path, custom_path)
-        elif location_type == 'Absolute':
-            build_dir_path = custom_path
-    elif location_style == 'DeterminedByTargets':
-        # this is missing the configuration path
-        build_dir_path = os.path.join(project.projectRoot.obj_path, sym_root)
+    for case in Switch(location_style):
+        if case('Unique'):
+            xcodeproj_path = os.path.join(project.projectRoot.obj_path, project.name)
+            unique_path = hashStringForPath(xcodeproj_path)
+            # this is missing the configuration path.
+            project_dir_name = os.path.splitext(project.name)[0]+'-'+unique_path+'/Build/Products/'
+            build_dir_path = os.path.join(derived_data, project_dir_name)
+            break
+        if case('Shared'):
+            shared_path = CoreFoundation.CFPreferencesCopyAppValue('IDESharedBuildFolderName', 'com.apple.dt.Xcode') # pylint: disable=no-member
+            build_dir_path = os.path.join(derived_data, shared_path)
+            break
+        if case('Custom'):
+            location_type = CoreFoundation.CFPreferencesCopyAppValue('IDECustomBuildLocationType', 'com.apple.dt.Xcode') # pylint: disable=no-member
+            custom_path = CoreFoundation.CFPreferencesCopyAppValue('IDECustomBuildProductsPath', 'com.apple.dt.Xcode') # pylint: disable=no-member
+            for case in Switch(location_type):
+                if case('RelativeToDerivedData'):
+                    build_dir_path = os.path.join(derived_data, custom_path)
+                    break
+                if case('RelativeToWorkspace'):
+                    build_dir_path = os.path.join(project.path.base_path, custom_path)
+                    break
+                if case('Absolute'):
+                    build_dir_path = custom_path
+                    break
+                if case():
+                    break
+        if case('DeterminedByTargets'):
+            # this is missing the configuration path
+            build_dir_path = os.path.join(project.projectRoot.obj_path, sym_root)
+            break
+        if case():
+            break
     return build_dir_path
 
 def IntermediatesBuildLocation(project, target_name, config_name, sym_root):
@@ -130,19 +141,24 @@ def ProductsBuildLocation(project, sym_root):
 def resolvePathFromLocation(location_string, path, base_path):
     path_string = ''
     path_type, item_path = location_string.split(':')
-    # TODO: make this a switch statement
-    if path_type == 'group':
-        path = os.path.join(base_path, path)
-        path_string = os.path.join(path, item_path)
-    elif path_type == 'absolute':
-        path_string = item_path
-    elif path_type == 'developer':
-        path_string = os.path.join(resolve_developer_path(), item_path)
-    elif path_type == 'container':
-        path_string = os.path.join(base_path, item_path)
-    else:
-        Logger.write().error('[xcrun]: Invalid item path name!')
-        path_string = item_path
+    for case in Switch(path_type):
+        if case('group'):
+            path = os.path.join(base_path, path)
+            path_string = os.path.join(path, item_path)
+            break
+        if case('absolute'):
+            path_string = item_path
+            break
+        if case('developer'):
+            path_string = os.path.join(resolve_developer_path(), item_path)
+            break
+        if case('container'):
+            path_string = os.path.join(base_path, item_path)
+            break
+        if case():
+            Logger.write().error('[xcrun]: Invalid item path name!')
+            path_string = item_path
+            break
     return path_string
 
 #def make_subprocess_session(action_list):

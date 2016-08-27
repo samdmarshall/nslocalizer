@@ -28,43 +28,11 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup
-import sys
+import os
 
-if sys.version_info < (3,0):
-    print('This tool requires at least Python 3.0. Please run `brew install python3` first.')
-    sys.exit()
-
-setup(
-    name = 'pylocalizer',
-    version = '0.1',
-    description = 'Tool for finding missing and unused NSLocalizdStrings',
-    url = 'https://github.com/samdmarshall/pylocalizer',
-    author = 'Samantha Marshall',
-    author_email = 'hello@pewpewthespells.com',
-    license = 'BSD 3-Clause',
-    packages = [
-        'pylocalizer',
-        'pylocalizer/Helpers',
-        'pylocalizer/xcodeproj',
-        'pylocalizer/xcodeproj/pbProj',
-        'pylocalizer/xcodeproj/pbProj/pbPlist',
-        'pylocalizer/Language',
-        'pylocalizer/Executor',
-        'pylocalizer/Finder',
-        'pylocalizer/Reporter',
-        'pylocalizer/Cache',
-        
-    ],
-    entry_points = {
-        'console_scripts': [ 'pylocalizer = pylocalizer:main' ]
-    },
-    test_suite = 'tests',
-    zip_safe = False,
-    install_requires = [
-        'pyobjc-core',
-        'pyobjc-framework-Cocoa',
-        'biplist',
-        'langcodes',
-    ]
-)
+def resolveFilePathForReference(project, reference) -> str:
+    file_path = reference.resolvePath(project)
+    project_dir = os.path.dirname(os.path.dirname(project.pbx_file_path))
+    file_path = os.path.join(project_dir, file_path)
+    norm_file_path = os.path.normpath(file_path)
+    return norm_file_path

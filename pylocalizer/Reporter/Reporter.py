@@ -28,16 +28,10 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__       import print_function
-from .Helpers.Logger  import Logger
-
-def writeToCache(all_warnings):
-    Logger.write().info('Writing to cache...')
-    for warning in all_warnings:
-        print(warning)
-
-def cleanCache():
-    Logger.write().info('Emptying cache...')
-
-    Logger.write().info('Cache removed!')
- 
+def logWarnings(warnings_dictionary, ignore_languages) -> None:
+    for key in warnings_dictionary:
+        locale_names = [language.name for language in warnings_dictionary.get(key) if language.code not in ignore_languages]
+        if len(locale_names):
+            message = ', '.join(locale_names)
+            warning = "%s:%d: warning: String '%s' missing for: %s" % (key.base.strings_file, key.line_number, key.string, message)
+            print(warning)
