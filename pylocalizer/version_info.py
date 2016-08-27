@@ -1,2 +1,2 @@
 remote_origin = 'git@github.com:samdmarshall/pylocalizer.git'
-commit_hash = 'd0e67f4'
+commit_hash = 'e05ff7b'

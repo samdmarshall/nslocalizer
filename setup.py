@@ -48,7 +48,6 @@ setup(
         'pylocalizer/Helpers',
         'pylocalizer/xcodeproj',
         'pylocalizer/xcodeproj/pbProj',
-        'pylocalizer/xcodeproj/pbProj/pbPlist',
         'pylocalizer/Language',
         'pylocalizer/Executor',
         'pylocalizer/Finder',
@@ -64,7 +63,7 @@ setup(
     install_requires = [
         'pyobjc-core',
         'pyobjc-framework-Cocoa',
-        'biplist',
+        'pbPlist',
         'langcodes',
     ]
 )

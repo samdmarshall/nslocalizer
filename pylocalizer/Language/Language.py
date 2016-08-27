@@ -29,8 +29,8 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os
+import pbPlist
 import langcodes
-from ..xcodeproj.pbProj.pbPlist     import pbPlist
 from .LanguageString                import LanguageString
 
 def GetLanguageCodeFromPath(path) -> str:
@@ -49,7 +49,7 @@ class Language(object):
         self.strings = self.loadStrings(self.strings_file)
 
     def loadStrings(self, file_path) -> list:
-        strings_file_contents = pbPlist.PBPlist(self.strings_file)
+        strings_file_contents = pbPlist.pbPlist.PBPlist(self.strings_file)
         results = [LanguageString(localized_string_key, strings_file_contents.root[localized_string_key]) for localized_string_key in list(strings_file_contents.root.keys())]
         return results
 

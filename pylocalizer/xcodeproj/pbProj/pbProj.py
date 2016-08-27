@@ -28,14 +28,14 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from .pbPlist           import pbPlist
+import pbPlist
 from .                  import PBX_Constants
 from .                  import PBX_Lookup
 
 class PBXProj(object):
 
     def __init__(self, file_path):
-        plist = pbPlist.PBPlist(file_path)
+        plist = pbPlist.pbPlist.PBPlist(file_path)
         contents = plist.root.nativeType()
 
         self.pbx_objects = set()
