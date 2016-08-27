@@ -5,6 +5,6 @@ codeclimate-test-reporter >= 0.1.2
 pylint >= 1.6.1
 
 pyobjc-core >= 2.5.1
-pyobjc-frameworks-Cocoa >= 2.5.1
+pyobjc-framework-Cocoa >= 2.5.1
 biplist >= 1.0.1
 langcodes >= 1.2.0
