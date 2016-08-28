@@ -29,17 +29,18 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os
-from ..Helpers.Logger                           import Logger
-from ..Language                                 import Language
-from ..Language                                 import LanguageString
-from ..Reporter                                 import Reporter
-from ..Cache                                    import Cache
-from ..xcodeproj.xcodeproj                      import xcodeproj
-from ..Finder.LanguageFinder                    import LanguageFinder
-from ..Finder                                   import CodeFinder
+from ..Helpers.Logger                import Logger
+from ..Language                      import Language
+from ..Reporter                      import Reporter
+from ..Cache                         import Cache
+from ..xcodeproj.xcodeproj           import xcodeproj
+from ..Finder.LanguageFinder         import LanguageFinder
+from ..Finder                        import CodeFinder
 
 class Executor(object):
-    
+    base_language = None
+    additional_languages = None
+
     @classmethod
     def run(cls, arguments) -> None:
         has_set_flag = arguments.find_missing or arguments.find_unused
@@ -53,7 +54,7 @@ class Executor(object):
             # parse project file
             project_file_path = os.path.normpath(arguments.project)
             xcodeproj_file = xcodeproj(project_file_path)
-            
+
             Logger.write().info('Search for target "%s" in project "%s"' % (arguments.target, os.path.basename(project_file_path)))
             # find target
             desired_target = [target for target in xcodeproj_file.project_file.targets() if target['name'] == arguments.target]
@@ -88,6 +89,7 @@ class Executor(object):
     @classmethod
     def findMissingStrings(cls, project, target) -> dict:
         Logger.write().info('Finding strings that are missing from language files...')
+        _ = target
         base_language, additional_languages = cls.generateLanguages(project)
 
         missing_results = [string.processMapping(base_language, additional_languages) for string in base_language.strings]
@@ -104,17 +106,18 @@ class Executor(object):
             print(source_code_file)
 
         return dict()
-    
 
     @classmethod
     def generateLanguages(cls, project) -> (Language, {Language}):
         strings_files, stringsdict_files = LanguageFinder.getLocalizationFiles(project.project_file)
 
         languages = set([Language.Language(path) for path in strings_files])
-        [language.loadStringsDictFile(stringsdict_files) for language in languages]
-    
-        additional_languages = set([language for language in languages if language.code != 'Base'])
-        base_language = languages.difference(additional_languages).pop()
-        base_language.findStrings()
+        for language in languages:
+            language.loadStringsDictFile(stringsdict_files)
 
-        return (base_language, additional_languages)
+        if cls.base_language is None and cls.additional_languages is None:
+            cls.additional_languages = set([language for language in languages if language.code != 'Base'])
+            cls.base_language = languages.difference(cls.additional_languages).pop()
+            cls.base_language.findStrings()
+
+        return (cls.base_language, cls.additional_languages)

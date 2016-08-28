@@ -30,7 +30,7 @@
 
 def logWarnings(warnings_dictionary, ignore_languages) -> None:
     keys = list(warnings_dictionary.keys())
-    keys.sort(key = lambda string: string.line_number)
+    keys.sort(key=lambda string: string.line_number)
     for key in keys:
         locale_names = [language.name for language in warnings_dictionary.get(key) if language.code not in ignore_languages]
         if len(locale_names):

@@ -49,6 +49,11 @@ def FindLineIndex(data, string) -> int:
         line_index = data[:position].count('\n') + 1
     return line_index
 
+def LoadStrings(file_path) -> list:
+    strings_file_contents = pbPlist.PBPlist(file_path)
+    results = [LanguageString(localized_string_key, strings_file_contents.root[localized_string_key]) for localized_string_key in list(strings_file_contents.root.keys())]
+    return results
+
 class Language(object):
     def __init__(self, strings_file_path):
         self.code = GetLanguageCodeFromPath(strings_file_path)
@@ -56,7 +61,7 @@ class Language(object):
         self.strings_file = strings_file_path
         self.stringsdict_file = None
         self.stringsdict = None
-        self.strings = self.loadStrings(self.strings_file)
+        self.strings = LoadStrings(self.strings_file)
 
     def getFileData(self) -> object:
         data = None
@@ -72,16 +77,13 @@ class Language(object):
             raise
         return data
 
-    def loadStrings(self, file_path) -> list:
-        strings_file_contents = pbPlist.PBPlist(self.strings_file)
-        results = [LanguageString(localized_string_key, strings_file_contents.root[localized_string_key]) for localized_string_key in list(strings_file_contents.root.keys())]
-        return results
-
     def findStrings(self) -> None:
-        Logger.write().info('Resolving line numbers for the %s file...' % os.path.basename(self.strings_file))
-        data = self.getFileData()
-        for lstring in self.strings:
-            lstring.line_number = FindLineIndex(data, lstring.string)
+        strings_missing_line_numbers = [lstring for lstring in self.strings if lstring.line_number == 0]
+        if len(strings_missing_line_numbers):
+            Logger.write().info('Resolving line numbers...')
+            data = self.getFileData()
+            for lstring in strings_missing_line_numbers:
+                lstring.line_number = FindLineIndex(data, lstring.string)
 
     def loadStringsDictFile(self, stringsdict_file_array) -> None:
         for stringsdict_file in stringsdict_file_array:
@@ -90,7 +92,7 @@ class Language(object):
                 self.stringsdict_file = stringsdict_file
                 break
         if self.stringsdict_file is not None:
-            self.stringsdict = self.loadStrings(self.stringsdict_file)
+            self.stringsdict = LoadStrings(self.stringsdict_file)
 
-    def __repr__(self): # pragma: no cover
+    def __repr__(self) -> str: # pragma: no cover
         return '<%s : %s>' % (type(self).__name__, self.name)

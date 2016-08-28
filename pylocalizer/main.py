@@ -28,7 +28,6 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
 import sys
 import argparse
 from .version             import __version__ as PYLOCALIZER_VERSION
@@ -102,7 +101,7 @@ def main(argv=sys.argv[1:]):
     # perform the logging modifications before we do any other operations
     Logger.isVerbose(args.verbose)
     Logger.isSilent(args.quiet)
-    
+
     ignored_locales = ', '.join(args.ignore)
     Logger.write().info('Ignoring languages: %s' % ignored_locales)
 
