@@ -29,14 +29,25 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os
+import sys
 import langcodes
-from .LanguageString                import LanguageString
-from pbPlist                        import pbPlist
+from pbPlist               import pbPlist
+from pbPlist               import pbParser
+from .LanguageString       import LanguageString
+from ..Helpers.Logger      import Logger
+
 def GetLanguageCodeFromPath(path) -> str:
     dirname = os.path.dirname(path)
     basename = os.path.basename(dirname)
     locale, _ = os.path.splitext(basename)
     return locale
+
+def FindLineIndex(data, string) -> int:
+    line_index = 0
+    if data is not None:
+        position = data.find(str(string))
+        line_index = data[:position].count('\n') + 1
+    return line_index
 
 class Language(object):
     def __init__(self, strings_file_path):
@@ -47,10 +58,30 @@ class Language(object):
         self.stringsdict = None
         self.strings = self.loadStrings(self.strings_file)
 
+    def getFileData(self) -> object:
+        data = None
+        try:
+            encoding = pbParser.GetFileEncoding(self.strings_file)
+            file_descriptor = pbParser.OpenFileWithEncoding(self.strings_file, encoding)
+            data = file_descriptor.read()
+            file_descriptor.close()
+        except IOError as exception: # pragma: no cover
+            print('I/O error({0}): {1}'.format(exception.errno, exception.strerror))
+        except: # pragma: no cover
+            print('Unexpected error:'+str(sys.exc_info()[0]))
+            raise
+        return data
+
     def loadStrings(self, file_path) -> list:
         strings_file_contents = pbPlist.PBPlist(self.strings_file)
         results = [LanguageString(localized_string_key, strings_file_contents.root[localized_string_key]) for localized_string_key in list(strings_file_contents.root.keys())]
         return results
+
+    def findStrings(self) -> None:
+        Logger.write().info('Resolving line numbers for the %s file...' % os.path.basename(self.strings_file))
+        data = self.getFileData()
+        for lstring in self.strings:
+            lstring.line_number = FindLineIndex(data, lstring.string)
 
     def loadStringsDictFile(self, stringsdict_file_array) -> None:
         for stringsdict_file in stringsdict_file_array:

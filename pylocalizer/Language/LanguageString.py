@@ -28,27 +28,6 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import sys
-from pbPlist import pbParser
-
-def FindLineIndex(base_language, string) -> int:
-    line_index = 0
-    data = None
-    try:
-        encoding = pbParser.GetFileEncoding(base_language.strings_file)
-        file_descriptor = pbParser.OpenFileWithEncoding(base_language.strings_file, encoding)
-        data = file_descriptor.read()
-        file_descriptor.close()
-    except IOError as exception: # pragma: no cover
-        print('I/O error({0}): {1}'.format(exception.errno, exception.strerror))
-    except: # pragma: no cover
-        print('Unexpected error:'+str(sys.exc_info()[0]))
-        raise
-    if data is not None:
-        position = data.find(str(string))
-        line_index = data[:position].count('\n') + 1
-    return line_index
-
 def HasStringForLanguage(string, language) -> bool:
     result = False
     for lang_string in language.strings:
@@ -70,7 +49,6 @@ class LanguageString(object):
 
     def processMapping(self, base_language, additional_languages) -> (object, list):
         self.base = base_language
-        self.line_number = FindLineIndex(self.base, self.string)
         results = [(language, HasStringForLanguage(self.string, language)) for language in additional_languages]
         self.mapping = dict(results)
         missing_keys = [key for key in self.mapping if self.mapping[key] is False]

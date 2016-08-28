@@ -35,7 +35,7 @@ from ..Language                                 import LanguageString
 from ..Reporter                                 import Reporter
 from ..Cache                                    import Cache
 from ..xcodeproj.xcodeproj                      import xcodeproj
-from ..Finder                                   import LanguageFinder
+from ..Finder.LanguageFinder                    import LanguageFinder
 from ..Finder                                   import CodeFinder
 
 class Executor(object):
@@ -69,12 +69,12 @@ class Executor(object):
             unused_strings = dict()
 
             if arguments.find_missing:
-                missing_strings = findMissingStrings(xcodeproj_file, desired_target)
+                missing_strings = cls.findMissingStrings(xcodeproj_file, desired_target)
                 # log data to xcode console
                 Reporter.logWarnings(missing_strings, arguments.ignore)
 
             if arguments.find_unused:
-                unused_strings = findUnusedStrings(xcodeproj_file, desired_target)
+                unused_strings = cls.findUnusedStrings(xcodeproj_file, desired_target)
                 # log data to xcode console
                 Reporter.logWarnings(unused_strings, arguments.ignore)
 
@@ -85,28 +85,36 @@ class Executor(object):
         else:
             Logger.write().info('Could not find target "%s" in the specified project file.' % arguments.target) # pragma: no cover
 
-def generateLanguages(project) -> set:
-    strings_files, stringsdict_files = LanguageFinder.getLocalizationFiles(project.project_file)
+    @classmethod
+    def findMissingStrings(cls, project, target) -> dict:
+        Logger.write().info('Finding strings that are missing from language files...')
+        base_language, additional_languages = cls.generateLanguages(project)
 
-    languages = [Language.Language(path) for path in strings_files]
-    [language.loadStringsDictFile(stringsdict_files) for language in languages]
+        missing_results = [string.processMapping(base_language, additional_languages) for string in base_language.strings]
 
-    return set(languages)
+        return dict(missing_results)
 
-def findMissingStrings(project, target) -> dict:
-    Logger.write().info('Finding strings that are missing from language files...')
-    languages = generateLanguages(project)
+    @classmethod
+    def findUnusedStrings(cls, project, target) -> dict:
+        Logger.write().info('Finding strings that are unused but are in language files...')
+        code_files = CodeFinder.getCodeFileList(project.project_file, target)
+        base_language, additional_languages = cls.generateLanguages(project)
 
-    additional_languages = set([language for language in languages if language.code != 'Base'])
-    base_language = languages.difference(additional_languages).pop()
+        for source_code_file in code_files:
+            print(source_code_file)
 
-    missing_results = [string.processMapping(base_language, additional_languages) for string in base_language.strings]
+        return dict()
+    
 
-    return dict(missing_results)
+    @classmethod
+    def generateLanguages(cls, project) -> (Language, {Language}):
+        strings_files, stringsdict_files = LanguageFinder.getLocalizationFiles(project.project_file)
 
-def findUnusedStrings(project, target) -> dict:
-    Logger.write().info('Finding strings that are unused but are in language files...')
-    code_files = CodeFinder.getCodeFileList(project.project_file, target)
-    languages = generateLanguages(project)
+        languages = set([Language.Language(path) for path in strings_files])
+        [language.loadStringsDictFile(stringsdict_files) for language in languages]
+    
+        additional_languages = set([language for language in languages if language.code != 'Base'])
+        base_language = languages.difference(additional_languages).pop()
+        base_language.findStrings()
 
-    return dict()
+        return (base_language, additional_languages)

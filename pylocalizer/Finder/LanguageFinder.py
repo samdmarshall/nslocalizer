@@ -34,34 +34,44 @@ from ..xcodeproj.pbProj.PBXSourcesBuildPhase    import PBXSourcesBuildPhase
 from ..xcodeproj.pbProj.PBXVariantGroup         import PBXVariantGroup
 from .                                          import PathFinder
 
-def FilterByName(items, name) -> object:
-    matched_items = [item for item in items if item.store[pbProj.PBX_Constants.kPBX_REFERENCE_name] == name]
-    if len(matched_items):
-        matched_items = matched_items[0]
-    else:
-        matched_items = None
-    return matched_items
+class LanguageFinder(object):
+    localizable_strings = None
+    localizable_stringsdict = None
+    strings_file_refs = None
+    stringsdict_file_refs = None
+    
+    @classmethod
+    def FilterByName(cls, items, name) -> object:
+        matched_items = [item for item in items if item.store[pbProj.PBX_Constants.kPBX_REFERENCE_name] == name]
+        if len(matched_items):
+            matched_items = matched_items[0]
+        else:
+            matched_items = None
+        return matched_items
+    
+    @classmethod
+    def getLocalizationFiles(cls, project) -> (dict, dict):
+        if cls.localizable_strings is None:
+            Logger.write().info('Filtering for Localizable.strings and Localizable.stringsdict files...')
+            variant_groups = [pbx_object for pbx_object in project.pbx_objects if isinstance(pbx_object, PBXVariantGroup)]
 
-def getLocalizationFiles(project) -> (dict, dict):
-    Logger.write().info('Filtering for Localizable.strings and Localizable.stringsdict files...')
-    variant_groups = [pbx_object for pbx_object in project.pbx_objects if isinstance(pbx_object, PBXVariantGroup)]
+            # localizable.strings
+            cls.localizable_strings = cls.FilterByName(variant_groups, 'Localizable.strings')
 
-    # localizable.strings
-    localizable_strings = FilterByName(variant_groups, 'Localizable.strings')
+            # localizable.stringsdict
+            cls.localizable_stringsdict = cls.FilterByName(variant_groups, 'Localizable.stringsdict')
 
-    # localizable.stringsdict
-    localizable_stringsdict = FilterByName(variant_groups, 'Localizable.stringsdict')
+        if cls.strings_file_refs is None or cls.stringsdict_file_refs is None:
+            Logger.write().info('Resolving language-specific file paths...')
 
-    Logger.write().info('Resolving language-specific file paths...')
+            if cls.localizable_strings is not None and cls.strings_file_refs is None:
+                languages = cls.localizable_strings.store[pbProj.PBX_Constants.kPBX_REFERENCE_children]
+                cls.strings_file_refs = [PathFinder.resolveFilePathForReference(project, language_file) for language_file in languages]
 
-    strings_file_refs = list()
-    if localizable_strings is not None:
-        languages = localizable_strings.store[pbProj.PBX_Constants.kPBX_REFERENCE_children]
-        strings_file_refs = [PathFinder.resolveFilePathForReference(project, language_file) for language_file in languages]
+            if cls.localizable_stringsdict is not None and cls.stringsdict_file_refs is None:
+                language_dicts = cls.localizable_stringsdict.store[pbProj.PBX_Constants.kPBX_REFERENCE_children]
+                cls.stringsdict_file_refs = [PathFinder.resolveFilePathForReference(project, language_file_dict) for language_file_dict in language_dicts]
 
-    stringsdict_file_refs = list()
-    if localizable_stringsdict is not None:
-        language_dicts = localizable_stringsdict.store[pbProj.PBX_Constants.kPBX_REFERENCE_children]
-        stringsdict_file_refs = [PathFinder.resolveFilePathForReference(project, language_file_dict) for language_file_dict in language_dicts]
+        return (cls.strings_file_refs, cls.stringsdict_file_refs)
 
-    return (strings_file_refs, stringsdict_file_refs)
+
