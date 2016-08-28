@@ -37,7 +37,7 @@ import CoreFoundation
 from .Logger    import Logger
 from .Switch    import Switch
 
-def hashStringForPath(path):
+def hashStringForPath(path) -> str:
     """
     Returns the hash for a project's DerivedData location.
 
@@ -69,7 +69,7 @@ def hashStringForPath(path):
 
     return hash_path_string
 
-def ResolveDerivedDataPath(project):
+def ResolveDerivedDataPath(project) -> str:
     default_dd_path = os.path.expanduser("~/Library/Developer/Xcode/DerivedData/")
     derived_data = CoreFoundation.CFPreferencesCopyAppValue('IDECustomDerivedDataLocation', 'com.apple.dt.Xcode') # pylint: disable=no-member
     if derived_data is None:
@@ -79,7 +79,7 @@ def ResolveDerivedDataPath(project):
             derived_data = os.path.join(project.path, derived_data)
     return derived_data
 
-def ResolveBuildLocation(project, sym_root):
+def ResolveBuildLocation(project, sym_root) -> str:
     build_dir_path = ''
     derived_data = ResolveDerivedDataPath(project)
     location_style = CoreFoundation.CFPreferencesCopyAppValue('IDEBuildLocationStyle', 'com.apple.dt.Xcode') # pylint: disable=no-member
@@ -118,7 +118,7 @@ def ResolveBuildLocation(project, sym_root):
             break
     return build_dir_path
 
-def IntermediatesBuildLocation(project, target_name, config_name, sym_root):
+def IntermediatesBuildLocation(project, target_name, config_name, sym_root) -> str:
     build_dir_path = ResolveBuildLocation(project, sym_root)
     project_name = project.name.split('.')[0]
     project_dir_path = os.path.join(build_dir_path, project_name+'.build')
@@ -126,7 +126,7 @@ def IntermediatesBuildLocation(project, target_name, config_name, sym_root):
     target_dir_path = os.path.join(config_dir_path, target_name+'.build')
     return target_dir_path
 
-def ProductsBuildLocation(project, sym_root):
+def ProductsBuildLocation(project, sym_root) -> str:
     """
     Returns the full path to the location of the build products.
 
@@ -138,7 +138,7 @@ def ProductsBuildLocation(project, sym_root):
     build_dir_path = ResolveBuildLocation(project, sym_root)
     return build_dir_path
 
-def resolvePathFromLocation(location_string, path, base_path):
+def resolvePathFromLocation(location_string, path, base_path) -> str:
     path_string = ''
     path_type, item_path = location_string.split(':')
     for case in Switch(path_type):
@@ -172,7 +172,7 @@ def resolvePathFromLocation(location_string, path, base_path):
 #    stdout = proc.communicate(action)[0]
 #    return stdout
 
-def make_subprocess_call(call_args, shell_state=False):
+def make_subprocess_call(call_args, shell_state=False) -> (str, int):
     error = 0
     output = ''
     try:
@@ -183,7 +183,7 @@ def make_subprocess_call(call_args, shell_state=False):
         error = exception.returncode
     return (output, error)
 
-def make_xcrun_with_args(args_tuple):
+def make_xcrun_with_args(args_tuple) -> str:
     xcrun_result = make_subprocess_call((('xcrun',) + args_tuple))
     if xcrun_result[1] != 0: # pragma: no cover
         Logger.write().error('[xcrun]: Error in exec!')
@@ -191,10 +191,10 @@ def make_xcrun_with_args(args_tuple):
     xcrun_output = str(xcrun_result[0]).rstrip('\n')
     return xcrun_output
 
-def resolve_sdk_path(sdk_name):
+def resolve_sdk_path(sdk_name) -> str:
     return make_xcrun_with_args(('--show-sdk-path', '--sdk', sdk_name))
 
-def resolve_developer_path():
+def resolve_developer_path() -> str:
     xcrun_result = make_subprocess_call(('xcode-select', '-p'))
     if xcrun_result[1] != 0: # pragma: no cover
         Logger.write().error('[xcrun]: Please run Xcode first!')
