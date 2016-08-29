@@ -43,7 +43,7 @@ class PBXProj(object):
         self.pbx_root_object = None
         self.pbx_object_version = 0
         self.pbx_archive_version = 0
-        if contents != None:
+        if contents is not None:
             # get the path that we read from
             self.pbx_file_path = plist.file_path
 
@@ -66,11 +66,7 @@ class PBXProj(object):
             # get all the objects
             objects_dict = contents.get(PBX_Constants.kPBX_objects, None)
 
-            for entry in objects_dict.keys():
-                entry_dict = objects_dict.get(entry, None)
-                if entry_dict:
-                    object_item = PBX_Lookup.PBX_Type_Resolver(entry, entry_dict)
-                    self.pbx_objects.add(object_item)
+            self.pbx_objects = [ PBX_Lookup.PBX_Type_Resolver(entry, value) for entry, value in list(objects_dict.items())]
 
             self.pbx_root_object = self.objectForIdentifier(self.pbx_identifier)
             self.pbx_root_object.resolveGraph(self)
@@ -99,10 +95,7 @@ class PBXProj(object):
         """
         result = None
         if self.isValid():
-            filter_results = list()
-            for pbx_object in self.pbx_objects:
-                if pbx_object.identifier == identifier:
-                    filter_results.append(pbx_object)
+            filter_results = [pbx_object for pbx_object in self.pbx_objects if pbx_object.identifier == identifier]
             if len(filter_results):
                 result = filter_results[0]
         return result
@@ -114,8 +107,7 @@ class PBXProj(object):
         """
         subprojects = set()
         if self.isValid():
-            for path in self.__subproject_paths():
-                subprojects.add(path)
+            subprojects = [path for path in self.__subproject_paths()]
         return subprojects
 
     def __subproject_paths(self):
@@ -127,9 +119,7 @@ class PBXProj(object):
         if self.isValid():
             project_references = self.pbx_root_object.get(PBX_Constants.kPBX_PROJECT_projectReferences, None)
             if project_references:
-                for project_dict in project_references:
-                    project_ref = project_dict[PBX_Constants.kPBX_PROJECTREF_ProjectRef]
-                    paths.append(project_ref)
+                paths = [project_dict[PBX_Constants.kPBX_PROJECTREF_ProjectRef] for project_dict in project_references]
         return paths
 
     def targets(self):

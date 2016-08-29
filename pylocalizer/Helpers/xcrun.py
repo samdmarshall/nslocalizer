@@ -156,21 +156,10 @@ def resolvePathFromLocation(location_string, path, base_path) -> str:
             path_string = os.path.join(base_path, item_path)
             break
         if case(): # pragma: no cover
-            Logger.write().error('[xcrun]: Invalid item path name!')
+            Logger.write().error('Invalid item path name!')
             path_string = item_path
             break
-    return path_string
-
-#def make_subprocess_session(action_list):
-#    script = '#!/bin/sh \n'
-#    for action in action_list:
-#        script += action + ';\n'
-#    script_file = tempfile.NamedTemporaryFile('wt')
-#    script_file.write(script)
-#    script_file.flush()
-#    proc = subprocess.Popen(['/bin/bash', script_file.name], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-#    stdout = proc.communicate(action)[0]
-#    return stdout
+    return path_stringa
 
 def make_subprocess_call(call_args, shell_state=False) -> (str, int):
     error = 0
