@@ -31,10 +31,10 @@
 import os
 import sys
 import langcodes
-from pbPlist               import pbPlist
-from pbPlist               import pbParser
-from .LanguageString       import LanguageString
-from ..Helpers.Logger      import Logger
+from pbPlist                    import pbPlist
+from .LanguageString            import LanguageString
+from ..Helpers.Logger           import Logger
+from ..Helpers.FileOperations   import FileOperations
 
 def GetLanguageCodeFromPath(path) -> str:
     dirname = os.path.dirname(path)
@@ -63,25 +63,13 @@ class Language(object):
         self.stringsdict = None
         self.strings = LoadStrings(self.strings_file)
 
-    def getFileData(self) -> object:
-        data = None
-        try:
-            encoding = pbParser.GetFileEncoding(self.strings_file)
-            file_descriptor = pbParser.OpenFileWithEncoding(self.strings_file, encoding)
-            data = file_descriptor.read()
-            file_descriptor.close()
-        except IOError as exception: # pragma: no cover
-            print('I/O error({0}): {1}'.format(exception.errno, exception.strerror))
-        except: # pragma: no cover
-            print('Unexpected error:'+str(sys.exc_info()[0]))
-            raise
-        return data
+
 
     def findStrings(self) -> None:
         strings_missing_line_numbers = [lstring for lstring in self.strings if lstring.line_number == 0]
         if len(strings_missing_line_numbers):
             Logger.write().info('Resolving line numbers...')
-            data = self.getFileData()
+            data = FileOperations.getData(self.strings_file)
             for lstring in strings_missing_line_numbers:
                 lstring.line_number = FindLineIndex(data, lstring.string)
 

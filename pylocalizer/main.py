@@ -95,10 +95,23 @@ def main(argv=sys.argv[1:]):
         default=list(),
         nargs='*'
     )
-
+    parser.add_argument(
+        '--no-ansi',
+        help='Disables the ANSI color codes as part of the logger',
+        default=False,
+        action='store_true'
+    )
+    parser.add_argument(
+        '--debug',
+        help=argparse.SUPPRESS,
+        default=False,
+        action='store_true'
+    )
     args = parser.parse_args(argv)
 
     # perform the logging modifications before we do any other operations
+    Logger.disableANSI(args.no_ansi)
+    Logger.enableDebugLogger(args.debug)
     Logger.isVerbose(args.verbose)
     Logger.isSilent(args.quiet)
 

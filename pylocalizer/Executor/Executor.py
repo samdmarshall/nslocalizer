@@ -29,13 +29,15 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os
-from ..Helpers.Logger                import Logger
-from ..Language                      import Language
-from ..Reporter                      import Reporter
-from ..Cache                         import Cache
-from ..xcodeproj.xcodeproj           import xcodeproj
-from ..Finder.LanguageFinder         import LanguageFinder
-from ..Finder                        import CodeFinder
+import re
+from ..Helpers.Logger               import Logger
+from ..Helpers.FileOperations       import FileOperations
+from ..Language                     import Language
+from ..Reporter                     import Reporter
+from ..Cache                        import Cache
+from ..xcodeproj.xcodeproj          import xcodeproj
+from ..Finder.LanguageFinder        import LanguageFinder
+from ..Finder                       import CodeFinder
 
 class Executor(object):
     base_language = None
@@ -72,12 +74,12 @@ class Executor(object):
             if arguments.find_missing:
                 missing_strings = cls.findMissingStrings(xcodeproj_file, desired_target)
                 # log data to xcode console
-                Reporter.logWarnings(missing_strings, arguments.ignore)
+                Reporter.logMissingStrings(missing_strings, arguments.ignore)
 
             if arguments.find_unused:
                 unused_strings = cls.findUnusedStrings(xcodeproj_file, desired_target)
                 # log data to xcode console
-                Reporter.logWarnings(unused_strings, arguments.ignore)
+                Reporter.logUnusedStrings(unused_strings)
 
             # write data to persitance store
             Cache.writeToCache((missing_strings, unused_strings))
@@ -97,15 +99,20 @@ class Executor(object):
         return dict(missing_results)
 
     @classmethod
-    def findUnusedStrings(cls, project, target) -> dict:
+    def findUnusedStrings(cls, project, target) -> list:
         Logger.write().info('Finding strings that are unused but are in language files...')
         code_files = CodeFinder.getCodeFileList(project.project_file, target)
         base_language, additional_languages = cls.generateLanguages(project)
 
-        for source_code_file in code_files:
-            print(source_code_file)
+        known_strings = set()
 
-        return dict()
+        for source_code_file in code_files:
+            data = FileOperations.getData(source_code_file)
+            matches = re.findall("NSLocalizedString\(@?\"(.*?)\",", data)
+            Logger.write().debug('%s: %i results' % (os.path.basename(source_code_file), len(matches)))
+            known_strings.update(matches)
+        unused_strings = [lstring for lstring in base_language.strings if lstring.string not in known_strings]
+        return unused_strings
 
     @classmethod
     def generateLanguages(cls, project) -> (Language, {Language}):

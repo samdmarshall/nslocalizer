@@ -38,23 +38,74 @@ class Singleton(type):
             cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
 
+#These are the sequences need to get colored ouput
+RESET_SEQ = '\033[0m'
+BOLD_SEQ = '\033[1m'
+
+COLORS = {
+    'BLACK': '\033[1;30m',
+    'RED': '\033[1;31m',
+    'GREEN': '\033[1;32m',
+    'YELLOW': '\033[1;33m',
+    'BLUE': '\033[1;34m',
+    'MAGENTA': '\033[1;35m',
+    'CYAN': '\033[1;36m',
+    'WHITE': '\033[1;37m'
+}
+
+LEVELS = {
+    'WARNING': COLORS['YELLOW'],
+    'INFO': COLORS['BLACK'],
+    'DEBUG': COLORS['MAGENTA'],
+    'CRITICAL': COLORS['BLUE'],
+    'ERROR': COLORS['RED']
+}
+
+class ColoredFormatter(logging.Formatter):
+    def __init__(self, msg, use_color=True):
+        logging.Formatter.__init__(self, msg)
+        self.use_color = use_color
+
+    def format(self, record): # pragma: no cover
+        levelname = record.levelname
+        if self.use_color and levelname in LEVELS:
+            levelname_color = LEVELS[levelname] + levelname + RESET_SEQ
+            record.levelname = levelname_color
+        return logging.Formatter.format(self, record)
+
 class Logger(object):
     __metaclass__ = Singleton
     _internal_logger = None
+    _debug_logging = False
+    _use_ansi_codes = False
 
     def __init__(self, *args, **kwargs): # pragma: no cover
         pass
 
     @staticmethod
+    def enableDebugLogger(is_debug_logger=False):
+        Logger._debug_logging = is_debug_logger
+
+    @staticmethod
+    def disableANSI(disable_ansi=False):
+        Logger._use_ansi_codes = not disable_ansi
+
+    @staticmethod
     def setupLogger():
         Logger._internal_logger = logging.getLogger('com.pewpewthespells.py.logging_helper')
-        Logger._internal_logger.setLevel(logging.INFO)
+
+        level = logging.DEBUG if Logger._debug_logging else logging.INFO
+        Logger._internal_logger.setLevel(level)
 
         handler = logging.StreamHandler()
-        handler.setLevel(logging.INFO)
+        handler.setLevel(level)
 
         # create formatter
-        formatter = logging.Formatter('[%(levelname)s]: %(message)s')
+        formatter = None
+        if Logger._debug_logging is True: # pragma: no cover
+            formatter = ColoredFormatter('[%(levelname)s][%(filename)s:%(lineno)s]: %(message)s', Logger._use_ansi_codes)
+        else:
+            formatter = ColoredFormatter('[%(levelname)s]: %(message)s', Logger._use_ansi_codes)
 
         # add formatter to ch
         handler.setFormatter(formatter)

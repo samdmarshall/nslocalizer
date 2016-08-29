@@ -31,6 +31,7 @@
 import os
 import collections
 from . import PBX_Constants
+from ...Helpers              import xcrun
 
 def getGraphNodeWithIdentifier(identifier, project):
     found_object = project.objectForIdentifier(identifier)
@@ -128,7 +129,7 @@ def resolvePathTypeFromSource(source):
         'SOURCE_ROOT': 'resolveSourceRootPath',
         'DEVELOPER_DIR': 'resolveDeveloperDirPath',
         'BUILT_PRODUCTS_DIR': 'resolveBuildProductsPath',
-        'SDKROOT': 'resolveSDKPath'
+        'SDKROOT': 'resolveSDKPath',
     }
     if source in list(lookup.keys()):
         result = lookup[source]
@@ -159,7 +160,12 @@ class PBX_Base_Reference(PBXItem):
         return file_path
     def resolveSourceRootPath(self, project):
         project_dir = os.path.dirname(os.path.dirname(project.pbx_file_path))
-        return os.path.join(project_dir, self.store[PBX_Constants.kPBX_REFERENCE_path])
+        return project_dir
+    def resolveDeveloperDirPath(self, project):
+        return resolve_developer_path()
+    def resolveSDKPath(self, project):
+        sdk_name = os.environ.get('SDKROOT')
+        return resolve_sdk_path(sdk_name)
     def resolvePath(self, project):
         source = self.store[PBX_Constants.kPBX_REFERENCE_sourceTree]
         source_func = resolvePathTypeFromSource(source)
