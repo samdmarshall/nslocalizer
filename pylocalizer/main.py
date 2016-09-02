@@ -33,7 +33,6 @@ import argparse
 from .version             import __version__ as PYLOCALIZER_VERSION
 from .Helpers.Logger      import Logger
 from .Executor.Executor   import Executor
-from .Cache               import Cache
 
 # Main
 def main(argv=sys.argv[1:]):
@@ -83,12 +82,6 @@ def main(argv=sys.argv[1:]):
         action='store_true'
     )
     parser.add_argument(
-        '--clean-cache',
-        help='Clears the cache of all results',
-        default=False,
-        action='store_true'
-    )
-    parser.add_argument(
         '--ignore',
         help='Specify specific locales to ignore',
         type=str,
@@ -118,13 +111,7 @@ def main(argv=sys.argv[1:]):
     ignored_locales = ', '.join(args.ignore)
     Logger.write().info('Ignoring languages: %s' % ignored_locales)
 
-    if args.clean_cache:
-        Logger.write().info('Cleaning all project caches...')
-
-        # clean the cache
-        Cache.cleanCache()
-    else:
-        Executor.run(args)
+    Executor.run(args)
 
 if __name__ == "__main__": # pragma: no cover
     main()

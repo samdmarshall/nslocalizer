@@ -52,7 +52,6 @@ setup(
         'pylocalizer/Executor',
         'pylocalizer/Finder',
         'pylocalizer/Reporter',
-        'pylocalizer/Cache',
         
     ],
     entry_points = {

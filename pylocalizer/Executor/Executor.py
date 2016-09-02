@@ -34,7 +34,6 @@ from ..Helpers.Logger               import Logger
 from ..Helpers.FileOperations       import FileOperations
 from ..Language                     import Language
 from ..Reporter                     import Reporter
-from ..Cache                        import Cache
 from ..xcodeproj.xcodeproj          import xcodeproj
 from ..Finder.LanguageFinder        import LanguageFinder
 from ..Finder                       import CodeFinder
@@ -81,10 +80,6 @@ class Executor(object):
                 # log data to xcode console
                 Reporter.logUnusedStrings(unused_strings)
 
-            # write data to persitance store
-            Cache.writeToCache((missing_strings, unused_strings))
-
-            # close up files
         else:
             Logger.write().info('Could not find target "%s" in the specified project file.' % arguments.target) # pragma: no cover
 
