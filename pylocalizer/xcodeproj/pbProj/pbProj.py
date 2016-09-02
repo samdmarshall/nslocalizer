@@ -66,7 +66,7 @@ class PBXProj(object):
             # get all the objects
             objects_dict = contents.get(PBX_Constants.kPBX_objects, None)
 
-            self.pbx_objects = [ PBX_Lookup.PBX_Type_Resolver(entry, value) for entry, value in list(objects_dict.items())]
+            self.pbx_objects = [PBX_Lookup.PBX_Type_Resolver(entry, value) for entry, value in list(objects_dict.items())]
 
             self.pbx_root_object = self.objectForIdentifier(self.pbx_identifier)
             self.pbx_root_object.resolveGraph(self)

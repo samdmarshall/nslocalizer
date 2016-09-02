@@ -37,7 +37,7 @@ if sys.version_info < (3,0):
 
 setup(
     name = 'pylocalizer',
-    version = '0.1',
+    version = '1.0',
     description = 'Tool for finding missing and unused NSLocalizdStrings',
     url = 'https://github.com/samdmarshall/pylocalizer',
     author = 'Samantha Marshall',

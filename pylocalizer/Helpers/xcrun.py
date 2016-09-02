@@ -159,7 +159,7 @@ def resolvePathFromLocation(location_string, path, base_path) -> str:
             Logger.write().error('Invalid item path name!')
             path_string = item_path
             break
-    return path_stringa
+    return path_string
 
 def make_subprocess_call(call_args, shell_state=False) -> (str, int):
     error = 0

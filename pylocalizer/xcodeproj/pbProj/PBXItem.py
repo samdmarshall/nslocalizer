@@ -162,9 +162,11 @@ class PBX_Base_Reference(PBXItem):
         project_dir = os.path.dirname(os.path.dirname(project.pbx_file_path))
         return project_dir
     def resolveDeveloperDirPath(self, project):
-        return resolve_developer_path()
+        return xcrun.resolve_developer_path()
     def resolveSDKPath(self, project):
         sdk_name = os.environ.get('SDKROOT')
+        if sdk_name == '':
+            raise ValueError('Unable to get a value for SDKROOT, please make sure to run this inside of Xcode!')
         return resolve_sdk_path(sdk_name)
     def resolvePath(self, project):
         source = self.store[PBX_Constants.kPBX_REFERENCE_sourceTree]

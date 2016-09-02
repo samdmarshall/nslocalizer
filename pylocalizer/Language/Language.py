@@ -29,7 +29,6 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os
-import sys
 import langcodes
 from pbPlist                    import pbPlist
 from .LanguageString            import LanguageString
@@ -62,8 +61,6 @@ class Language(object):
         self.stringsdict_file = None
         self.stringsdict = None
         self.strings = LoadStrings(self.strings_file)
-
-
 
     def findStrings(self) -> None:
         strings_missing_line_numbers = [lstring for lstring in self.strings if lstring.line_number == 0]
