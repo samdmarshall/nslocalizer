@@ -1,6 +1,11 @@
 nslocalizer
 ===========
 
+[![Code Climate](https://img.shields.io/codeclimate/github/samdmarshall/nslocalizer.svg)](https://codeclimate.com/github/samdmarshall/nslocalizer)
+[![Test Coverage](https://img.shields.io/codeclimate/coverage/github/samdmarshall/nslocalizer.svg)](https://codeclimate.com/github/samdmarshall/nslocalizer/coverage)
+[![CircleCI branch](https://img.shields.io/circleci/project/samdmarshall/nslocalizer/develop.svg)](https://circleci.com/gh/samdmarshall/nslocalizer/tree/develop)
+[![Dependency Status](https://dependencyci.com/github/samdmarshall/nslocalizer/badge)](https://dependencyci.com/github/samdmarshall/nslocalizer)
+
 This is a command line tool that is used for discovering missing and unused localization strings in Xcode projects.
 
 ## Contributing and Code of Conduct [![License](https://img.shields.io/badge/License-3--Clause%20BSD-blue.svg)](./LICENSE)

@@ -1,2 +1,2 @@
 remote_origin = 'git@github.com:samdmarshall/nslocalizer.git'
-commit_hash = 'c67b2dd'
+commit_hash = '4908886'
