@@ -30,7 +30,9 @@
 
 def log(file_name, line_number, type_string, message_string) -> None:
     message = '%s:%s: %s: %s' % (file_name, line_number, type_string, message_string)
-    print(message)
+    ascii_message = message.encode('ascii', 'replace')
+    display_message = ascii_message.decode('ascii', 'ignore')
+    print(display_message)
 
 def logError(file_name, line_number, message_string) -> None:
     log(file_name, line_number, 'error', message_string)

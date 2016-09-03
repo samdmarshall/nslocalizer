@@ -43,8 +43,9 @@ def GetLanguageCodeFromPath(path) -> str:
 
 def FindLineIndex(data, string) -> int:
     line_index = 0
+    localized_string_entry = '"'+str(string)+'"'
     if data is not None:
-        position = data.find(str(string))
+        position = data.find(localized_string_entry)
         line_index = data[:position].count('\n') + 1
     return line_index
 
