@@ -13,10 +13,9 @@ engines:
 
 ratings:
   paths:
-  - pylocalizer/
+  - nslocalizer/
 
 exclude_paths:
-- pylocalizer.xcodeproj/
 - examples/
 - tests/
 - tools/
@@ -27,7 +26,7 @@ exclude_paths:
 - Dangerfile
 - Gemfile
 - LICENSE
-- pyc.py
 - contributing/
 - docs/
 - setup.py
+- nslocalizer.py
