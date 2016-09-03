@@ -1,7 +1,7 @@
 # Copyright (c) 2016, Samantha Marshall (http://pewpewthespells.com)
 # All rights reserved.
 #
-# https://github.com/samdmarshall/pylocalizer
+# https://github.com/samdmarshall/nslocalizer
 # 
 # Redistribution and use in source and binary forms, with or without modification, 
 # are permitted provided that the following conditions are met:
@@ -29,9 +29,9 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import unittest 
-from . import pylocalizer_test
+from . import nslocalizer_test
 
 if __name__ == '__main__':
     testsuite = unittest.TestLoader()
-    testsuite.addTest(pylocalizer_test.pylocalizerTestCases)
+    testsuite.addTest(nslocalizer_test.nslocalizerTestCases)
     unittest.TextTestRunner(verbosity=1).run(testsuite)

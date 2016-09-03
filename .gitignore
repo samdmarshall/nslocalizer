@@ -2,7 +2,7 @@
 installed_files.txt
 build/
 dist/
-pylocalizer.egg-info/
+nslocalizer.egg-info/
 .tox/
 .coverage
 *.pyc
@@ -10,4 +10,4 @@ __pycache__/
 htmlcov/
 .eggs/
 lint_output.txt
-output.plist
+*_output.plist

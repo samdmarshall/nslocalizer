@@ -1,7 +1,7 @@
 # Copyright (c) 2016, Samantha Marshall (http://pewpewthespells.com)
 # All rights reserved.
 #
-# https://github.com/samdmarshall/pylocalizer
+# https://github.com/samdmarshall/nslocalizer
 # 
 # Redistribution and use in source and binary forms, with or without modification, 
 # are permitted provided that the following conditions are met:
@@ -30,16 +30,16 @@
 
 import os
 import unittest
-from pylocalizer import main
+from nslocalizer import main
 
-class pylocalizerTestCases(unittest.TestCase):
+class nslocalizerTestCases(unittest.TestCase):
     
     def test_missing_strings(self):
-        example_path = os.path.join(os.path.dirname(__file__), 'pylocalizer-example/pylocalizer-example.xcodeproj')
-        main(['--project', example_path, '--target', 'pylocalizer-example', '--find-missing'])
+        example_path = os.path.join(os.path.dirname(__file__), 'nslocalizer-example/nslocalizer-example.xcodeproj')
+        main(['--project', example_path, '--target', 'nslocalizer-example', '--find-missing'])
         self.assertTrue(True)
 
     def test_unused_strings(self):
-        example_path = os.path.join(os.path.dirname(__file__), 'pylocalizer-example/pylocalizer-example.xcodeproj')
-        main(['--project', example_path, '--target', 'pylocalizer-example', '--find-unused'])
+        example_path = os.path.join(os.path.dirname(__file__), 'nslocalizer-example/nslocalizer-example.xcodeproj')
+        main(['--project', example_path, '--target', 'nslocalizer-example', '--find-unused'])
         self.assertTrue(True)

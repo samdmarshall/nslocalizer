@@ -28,41 +28,26 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup
-import sys
+import os
+from .pbProj           import pbProj
+from ..Helpers.Logger import Logger
 
-if sys.version_info < (3,0):
-    print('This tool requires at least Python 3.0. Please run `brew install python3` first.')
-    sys.exit()
+class xcodeproj(object):
 
-setup(
-    name = 'nslocalizer',
-    version = '1.0',
-    description = 'Tool for finding missing and unused NSLocalizdStrings',
-    url = 'https://github.com/samdmarshall/nslocalizer',
-    author = 'Samantha Marshall',
-    author_email = 'hello@pewpewthespells.com',
-    license = 'BSD 3-Clause',
-    packages = [
-        'nslocalizer',
-        'nslocalizer/Helpers',
-        'nslocalizer/xcodeproj',
-        'nslocalizer/xcodeproj/pbProj',
-        'nslocalizer/Language',
-        'nslocalizer/Executor',
-        'nslocalizer/Finder',
-        'nslocalizer/Reporter',
-        
-    ],
-    entry_points = {
-        'console_scripts': [ 'nslocalizer = nslocalizer:main' ]
-    },
-    test_suite = 'tests',
-    zip_safe = False,
-    install_requires = [
-        'pyobjc-core',
-        'pyobjc-framework-Cocoa',
-        'pbPlist',
-        'langcodes',
-    ]
-)
+    def __init__(self, xcodeproj_file_path):
+        if os.path.exists(xcodeproj_file_path):
+            if xcodeproj_file_path.endswith(('.xcodeproj', '.pbproj')):
+                self.file_path = xcodeproj_file_path
+                # loading the pbxproj
+                pbxproj_file_path = os.path.join(self.file_path, 'project.pbxproj')
+                if os.path.exists(pbxproj_file_path):
+                    self.project_file = pbProj.PBXProj(pbxproj_file_path)
+                else: # pragma: no cover
+                    Logger.write().error('Could not find the pbxproj file!')
+            else: # pragma: no cover
+                Logger.write().error('Not a Xcode project file!')
+        else: # pragma: no cover
+            Logger.write().error('Could not find the Xcode project file!')
+
+    def projects(self):
+        return self.project_file.projects()

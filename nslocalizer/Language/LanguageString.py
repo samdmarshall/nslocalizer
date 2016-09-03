@@ -28,41 +28,28 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup
-import sys
+def HasStringForLanguage(string, language) -> bool:
+    result = False
+    for lang_string in language.strings:
+        result = (string == lang_string.string)
+        if result is True:
+            break
+    return result
 
-if sys.version_info < (3,0):
-    print('This tool requires at least Python 3.0. Please run `brew install python3` first.')
-    sys.exit()
+class LanguageString(object):
+    def __init__(self, string_key, string_value):
+        self.line_number = 0
+        self.string = string_key
+        self.value = string_value
+        self.base = None
+        self.mapping = dict()
 
-setup(
-    name = 'nslocalizer',
-    version = '1.0',
-    description = 'Tool for finding missing and unused NSLocalizdStrings',
-    url = 'https://github.com/samdmarshall/nslocalizer',
-    author = 'Samantha Marshall',
-    author_email = 'hello@pewpewthespells.com',
-    license = 'BSD 3-Clause',
-    packages = [
-        'nslocalizer',
-        'nslocalizer/Helpers',
-        'nslocalizer/xcodeproj',
-        'nslocalizer/xcodeproj/pbProj',
-        'nslocalizer/Language',
-        'nslocalizer/Executor',
-        'nslocalizer/Finder',
-        'nslocalizer/Reporter',
-        
-    ],
-    entry_points = {
-        'console_scripts': [ 'nslocalizer = nslocalizer:main' ]
-    },
-    test_suite = 'tests',
-    zip_safe = False,
-    install_requires = [
-        'pyobjc-core',
-        'pyobjc-framework-Cocoa',
-        'pbPlist',
-        'langcodes',
-    ]
-)
+    def __repr__(self) -> str: # pragma: no cover
+        return str(self.string)
+
+    def processMapping(self, base_language, additional_languages) -> (object, list):
+        self.base = base_language
+        results = [(language, HasStringForLanguage(self.string, language)) for language in additional_languages]
+        self.mapping = dict(results)
+        missing_keys = [key for key in self.mapping if self.mapping[key] is False]
+        return (self, missing_keys)

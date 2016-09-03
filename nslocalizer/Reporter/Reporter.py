@@ -28,41 +28,34 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup
-import sys
+def log(file_name, line_number, type_string, message_string) -> None:
+    message = '%s:%s: %s: %s' % (file_name, line_number, type_string, message_string)
+    print(message)
 
-if sys.version_info < (3,0):
-    print('This tool requires at least Python 3.0. Please run `brew install python3` first.')
-    sys.exit()
+def logError(file_name, line_number, message_string) -> None:
+    log(file_name, line_number, 'error', message_string)
 
-setup(
-    name = 'nslocalizer',
-    version = '1.0',
-    description = 'Tool for finding missing and unused NSLocalizdStrings',
-    url = 'https://github.com/samdmarshall/nslocalizer',
-    author = 'Samantha Marshall',
-    author_email = 'hello@pewpewthespells.com',
-    license = 'BSD 3-Clause',
-    packages = [
-        'nslocalizer',
-        'nslocalizer/Helpers',
-        'nslocalizer/xcodeproj',
-        'nslocalizer/xcodeproj/pbProj',
-        'nslocalizer/Language',
-        'nslocalizer/Executor',
-        'nslocalizer/Finder',
-        'nslocalizer/Reporter',
-        
-    ],
-    entry_points = {
-        'console_scripts': [ 'nslocalizer = nslocalizer:main' ]
-    },
-    test_suite = 'tests',
-    zip_safe = False,
-    install_requires = [
-        'pyobjc-core',
-        'pyobjc-framework-Cocoa',
-        'pbPlist',
-        'langcodes',
-    ]
-)
+def logWarning(file_name, line_number, message_string) -> None:
+    log(file_name, line_number, 'warning', message_string)
+
+def logMissingStrings(warnings_dictionary, ignore_languages, is_warning=True) -> None:
+    keys = list(warnings_dictionary.keys())
+    keys.sort(key=lambda string: string.line_number)
+    for key in keys:
+        locale_names = [language.name for language in warnings_dictionary.get(key) if language.code not in ignore_languages]
+        if len(locale_names):
+            message = ', '.join(locale_names)
+            message_string = 'String "%s" missing for: %s' %  (key.string, message)
+            if is_warning is True:
+                logWarning(key.base.strings_file, key.line_number, message_string)
+            else:
+                logError(key.base.strings_file, key.line_number, message_string)
+
+def logUnusedStrings(unused_strings_list, is_warning=True) -> None:
+    unused_strings_list.sort(key=lambda string: string.line_number)
+    for unused_string in unused_strings_list:
+        message = 'String "%s" is not used' % unused_string.string
+        if is_warning is True:
+            logWarning(unused_string.base.strings_file, unused_string.line_number, message)
+        else:
+            logError(unused_string.base.strings_file, unused_string.line_number, message)

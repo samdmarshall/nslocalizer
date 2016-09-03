@@ -28,41 +28,22 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup
 import sys
+from pbPlist import pbParser
 
-if sys.version_info < (3,0):
-    print('This tool requires at least Python 3.0. Please run `brew install python3` first.')
-    sys.exit()
+class FileOperations(object):
 
-setup(
-    name = 'nslocalizer',
-    version = '1.0',
-    description = 'Tool for finding missing and unused NSLocalizdStrings',
-    url = 'https://github.com/samdmarshall/nslocalizer',
-    author = 'Samantha Marshall',
-    author_email = 'hello@pewpewthespells.com',
-    license = 'BSD 3-Clause',
-    packages = [
-        'nslocalizer',
-        'nslocalizer/Helpers',
-        'nslocalizer/xcodeproj',
-        'nslocalizer/xcodeproj/pbProj',
-        'nslocalizer/Language',
-        'nslocalizer/Executor',
-        'nslocalizer/Finder',
-        'nslocalizer/Reporter',
-        
-    ],
-    entry_points = {
-        'console_scripts': [ 'nslocalizer = nslocalizer:main' ]
-    },
-    test_suite = 'tests',
-    zip_safe = False,
-    install_requires = [
-        'pyobjc-core',
-        'pyobjc-framework-Cocoa',
-        'pbPlist',
-        'langcodes',
-    ]
-)
+    @classmethod
+    def getData(cls, file_path) -> object:
+        data = None
+        try:
+            encoding = pbParser.GetFileEncoding(file_path)
+            file_descriptor = pbParser.OpenFileWithEncoding(file_path, encoding)
+            data = file_descriptor.read()
+            file_descriptor.close()
+        except IOError as exception: # pragma: no cover
+            print('I/O error({0}): {1}'.format(exception.errno, exception.strerror))
+        except: # pragma: no cover
+            print('Unexpected error:'+str(sys.exc_info()[0]))
+            raise
+        return data

@@ -4,7 +4,7 @@ pushd $git_path
 	
 commit_hash=`git rev-parse --short HEAD`
 remote_origin=`git ls-remote --get-url`
-echo "remote_origin = '$remote_origin'\ncommit_hash = '$commit_hash'" > ./pylocalizer/version_info.py
-git add ./pylocalizer/version_info.py
+echo "remote_origin = '$remote_origin'\ncommit_hash = '$commit_hash'" > ./nslocalizer/version_info.py
+git add ./nslocalizer/version_info.py
 
 popd

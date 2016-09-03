@@ -1,7 +1,7 @@
 # Copyright (c) 2016, Samantha Marshall (http://pewpewthespells.com)
 # All rights reserved.
 #
-# https://github.com/samdmarshall/pylocalizer
+# https://github.com/samdmarshall/nslocalizer
 #
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
@@ -160,11 +160,6 @@ install-deps:
 
 # ---
 
-profile: check
-	$(PYTHON3) -m cProfile pylocalizer.py --project ~/Work/iRobot/aspen.home/ios/aspen.xcodeproj --target aspen --find-missing --find-unused --verbose
-
-# ---
-
 # this is for installing any tools that we don't already have
 
 install-tools: check
@@ -182,7 +177,7 @@ clean: check
 	@$(PRINTF) "Removing existing installation... "
 	@$(TOUCH) $(INSTALLED_FILES_RECORD)
 	@$(CAT) $(INSTALLED_FILES_RECORD) | $(XARGS) $(removeall)
-	@$(removeall) ./pylocalizer.egg-info
+	@$(removeall) ./nslocalizer.egg-info
 	@$(removeall) ./build
 	@$(removeall) ./dist
 	@$(removeall) ./.tox
@@ -192,6 +187,7 @@ clean: check
 	$(call cleanlocation, ., -name ".DS_Store")
 	$(call cleanlocation, ., -name "*.pyc")
 	$(call cleanlocation, ., -name "__pycache__" -type d)
+	$(call cleanlocation, ., -name "*_output.plist")
 	@$(PRINTF) "done!\n"
 	@$(DISPLAY_SEPARATOR)
 	
@@ -275,11 +271,11 @@ ci: test lint report danger
 lint: check
 	@$(TOUCH) lint_output.txt
 	@$(PRINTF) "Running linter... "
-	@$(PYLINT) --rcfile=pylintrc ./pylocalizer > lint_output.txt || :
+	@$(PYLINT) --rcfile=pylintrc ./nslocalizer > lint_output.txt || :
 	@$(PRINTF) " done!\n"
 	@$(PRINTF) "Generated linter report: lint_output.txt\n"
 	@$(DISPLAY_SEPARATOR)
 
 # ---
 
-.PHONY: danger lint ci report test build clean install-tools install-deps check profile
+.PHONY: danger lint ci report test build clean install-tools install-deps check
