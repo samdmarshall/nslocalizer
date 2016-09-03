@@ -35,11 +35,11 @@ from nslocalizer import main
 class nslocalizerTestCases(unittest.TestCase):
     
     def test_missing_strings(self):
-        example_path = os.path.join(os.path.dirname(__file__), 'nslocalizer-example/nslocalizer-example.xcodeproj')
-        main(['--project', example_path, '--target', 'nslocalizer-example', '--find-missing'])
+        example_path = os.path.join(os.path.dirname(__file__), 'nslocalizer-example/pylocalizer-example.xcodeproj')
+        main(['--project', example_path, '--target', 'pylocalizer-example', '--find-missing'])
         self.assertTrue(True)
 
     def test_unused_strings(self):
-        example_path = os.path.join(os.path.dirname(__file__), 'nslocalizer-example/nslocalizer-example.xcodeproj')
-        main(['--project', example_path, '--target', 'nslocalizer-example', '--find-unused'])
+        example_path = os.path.join(os.path.dirname(__file__), 'nslocalizer-example/pylocalizer-example.xcodeproj')
+        main(['--project', example_path, '--target', 'pylocalizer-example', '--find-unused'])
         self.assertTrue(True)

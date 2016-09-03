@@ -46,7 +46,7 @@ class LanguageString(object):
 
     def __repr__(self) -> str: # pragma: no cover
         return str(self.string)
-    
+
     def registerBase(self, base_language):
         self.base = base_language
 
