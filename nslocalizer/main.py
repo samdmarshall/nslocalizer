@@ -53,7 +53,7 @@ def main(argv=sys.argv[1:]):
     parser.add_argument(
         '--target',
         metavar='<target name>',
-        help='specify the name of the target to analyze',
+        help='specify the name of targets to analyze, this accepts multiple target names',
         type=str,
         default=list(),
         required=True,
@@ -86,7 +86,7 @@ def main(argv=sys.argv[1:]):
     )
     parser.add_argument(
         '--ignore',
-        help='Specify specific locales to ignore',
+        help='Specify languages to ignore (by code; eg: German = de).',
         type=str,
         default=list(),
         nargs='*'
