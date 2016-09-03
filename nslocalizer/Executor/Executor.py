@@ -106,6 +106,9 @@ class Executor(object):
             Logger.write().debug('%s: %i results' % (os.path.basename(source_code_file), len(matches)))
             known_strings.update(matches)
         unused_strings = [lstring for lstring in base_language.strings if lstring.string not in known_strings]
+        for unused_string in unused_strings:
+            unused_string.registerBase(base_language)
+
         return unused_strings
 
     @classmethod

@@ -41,4 +41,28 @@ There are a number of flags that can be passed to modify the behavior of **pycon
 `--verbose`        | Logs additional information
 `--ignore <languages>` | Will silence warnings for any of the languages listed to be ignored
 
+> Note: Both `--find-missing` and `--find-unused` flags can be supplied to the same invocation of `nslocalizer`.
 
+## Example
+
+Find missing translation strings:
+```bash
+$ nslocalizer --project Foo.xcodeproj --target MyNewApp --find-missing
+/Users/Samantha/Projects/Foo/Foo/Assets/Base.lproj/Localizable.strings:327: warning: String "foo_setup_twitter_integation" missing for: German, Traditional Chinese, European Portuguese, Spanish
+/Users/Samantha/Projects/Foo/Foo/Assets/Base.lproj/Localizable.strings:356: warning: String "foo_setup_facebook_integation" missing for: German, Traditional Chinese, European Portuguese, Swedish, Polish, Latin American Spanish, British English, Brazilian Portuguese
+```
+
+Find unused translation strings:
+```bash
+$ nslocalizer --project Foo.xcodeproj --target MyNewApp --find-unused
+/Users/Samantha/Projects/Foo/Foo/Assets/Base.lproj/Localizable.strings:327: warning: String "foo_setup_twitter_integation" is not used
+/Users/Samantha/Projects/Foo/Foo/Assets/Base.lproj/Localizable.strings:356: warning: String "foo_setup_facebook_integation" is not used
+```
+
+
+## Integration
+**nslocalizer** is intended to be used as part of a build of the Xcode project file. To integrate you will have to add a new "run script" phase to your target and then invoke as such:
+
+```
+nslocalizer --project $PROJECT_DIR/YourProject.xcodeproj --target $TARGET_NAME --find-missing --find-unused
+```

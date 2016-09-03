@@ -46,9 +46,12 @@ class LanguageString(object):
 
     def __repr__(self) -> str: # pragma: no cover
         return str(self.string)
+    
+    def registerBase(self, base_language):
+        self.base = base_language
 
     def processMapping(self, base_language, additional_languages) -> (object, list):
-        self.base = base_language
+        self.registerBase(base_language)
         results = [(language, HasStringForLanguage(self.string, language)) for language in additional_languages]
         self.mapping = dict(results)
         missing_keys = [key for key in self.mapping if self.mapping[key] is False]
