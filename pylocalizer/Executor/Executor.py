@@ -45,10 +45,10 @@ class Executor(object):
     @classmethod
     def run(cls, arguments) -> None:
         has_set_flag = arguments.find_missing or arguments.find_unused
-        can_run = arguments.project and arguments.target and has_set_flag
+        can_run = arguments.project and len(arguments.target) > 0 and has_set_flag
 
         xcodeproj_file = None
-        desired_target = None
+        desired_targets = list()
 
         if can_run:
             Logger.write().info('Loading project file...')
@@ -58,35 +58,32 @@ class Executor(object):
 
             Logger.write().info('Search for target "%s" in project "%s"' % (arguments.target, os.path.basename(project_file_path)))
             # find target
-            desired_target = [target for target in xcodeproj_file.project_file.targets() if target['name'] == arguments.target]
-            if len(desired_target):
-                desired_target = desired_target[0]
-            else:
-                desired_target = None # pragma: no cover
+            desired_targets = [target for target in xcodeproj_file.project_file.targets() if target['name'] in arguments.target]
         else:
             Logger.write().error('Please specify a project (--project) with a valid target (--target), and at least one search flag (--find-unused, --find-missing).') # pragma: no cover
 
-        if xcodeproj is not None and desired_target is not None:
+        if xcodeproj is not None and len(desired_targets) == len(arguments.target):
             missing_strings = dict()
             unused_strings = dict()
 
             if arguments.find_missing:
-                missing_strings = cls.findMissingStrings(xcodeproj_file, desired_target)
+                missing_strings = cls.findMissingStrings(xcodeproj_file, desired_targets)
                 # log data to xcode console
                 Reporter.logMissingStrings(missing_strings, arguments.ignore)
 
             if arguments.find_unused:
-                unused_strings = cls.findUnusedStrings(xcodeproj_file, desired_target)
+                unused_strings = cls.findUnusedStrings(xcodeproj_file, desired_targets)
                 # log data to xcode console
                 Reporter.logUnusedStrings(unused_strings)
 
-        else:
-            Logger.write().info('Could not find target "%s" in the specified project file.' % arguments.target) # pragma: no cover
+        else: # pragma: no cover
+            missing_targets = [target for target in arguments.target if target not in desired_targets]
+            Logger.write().info('Could not find target "%s" in the specified project file.' % '", "'.join(missing_targets))
 
     @classmethod
-    def findMissingStrings(cls, project, target) -> dict:
+    def findMissingStrings(cls, project, targets) -> dict:
         Logger.write().info('Finding strings that are missing from language files...')
-        _ = target
+        _ = targets
         base_language, additional_languages = cls.generateLanguages(project)
 
         missing_results = [string.processMapping(base_language, additional_languages) for string in base_language.strings]
@@ -94,16 +91,18 @@ class Executor(object):
         return dict(missing_results)
 
     @classmethod
-    def findUnusedStrings(cls, project, target) -> list:
+    def findUnusedStrings(cls, project, targets) -> list:
         Logger.write().info('Finding strings that are unused but are in language files...')
-        code_files = CodeFinder.getCodeFileList(project.project_file, target)
-        base_language, additional_languages = cls.generateLanguages(project)
+        code_files = list()
+        for target in targets:
+            code_files.extend(CodeFinder.getCodeFileList(project.project_file, target))
+        base_language, _ = cls.generateLanguages(project)
 
         known_strings = set()
 
         for source_code_file in code_files:
             data = FileOperations.getData(source_code_file)
-            matches = re.findall("NSLocalizedString\(@?\"(.*?)\",", data)
+            matches = re.findall(r"NSLocalizedString\(@?\"(.*?)\",", data)
             Logger.write().debug('%s: %i results' % (os.path.basename(source_code_file), len(matches)))
             known_strings.update(matches)
         unused_strings = [lstring for lstring in base_language.strings if lstring.string not in known_strings]

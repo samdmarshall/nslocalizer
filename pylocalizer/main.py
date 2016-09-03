@@ -54,8 +54,11 @@ def main(argv=sys.argv[1:]):
         '--target',
         metavar='<target name>',
         help='specify the name of the target to analyze',
+        type=str,
+        default=list(),
         required=True,
-        action='store'
+        action='store',
+        nargs='*'
     )
     parser.add_argument(
         '--find-missing',

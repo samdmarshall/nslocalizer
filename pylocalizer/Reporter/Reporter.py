@@ -58,4 +58,4 @@ def logUnusedStrings(unused_strings_list, is_warning=True) -> None:
         if is_warning is True:
             logWarning(unused_string.base.strings_file, unused_string.line_number, message)
         else:
-            logError(unused_string.base.strings_file, unused_string.line_number, message) 
+            logError(unused_string.base.strings_file, unused_string.line_number, message)
