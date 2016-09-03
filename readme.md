@@ -51,14 +51,14 @@ There are a number of flags that can be passed to modify the behavior of **pycon
 ## Example
 
 Find missing translation strings:
-```bash
+```
 $ nslocalizer --project Foo.xcodeproj --target MyNewApp --find-missing
 /Users/Samantha/Projects/Foo/Foo/Assets/Base.lproj/Localizable.strings:327: warning: String "foo_setup_twitter_integation" missing for: German, Traditional Chinese, European Portuguese, Spanish
 /Users/Samantha/Projects/Foo/Foo/Assets/Base.lproj/Localizable.strings:356: warning: String "foo_setup_facebook_integation" missing for: German, Traditional Chinese, European Portuguese, Swedish, Polish, Latin American Spanish, British English, Brazilian Portuguese
 ```
 
 Find unused translation strings:
-```bash
+```
 $ nslocalizer --project Foo.xcodeproj --target MyNewApp --find-unused
 /Users/Samantha/Projects/Foo/Foo/Assets/Base.lproj/Localizable.strings:327: warning: String "foo_setup_twitter_integation" is not used
 /Users/Samantha/Projects/Foo/Foo/Assets/Base.lproj/Localizable.strings:356: warning: String "foo_setup_facebook_integation" is not used
