@@ -40,7 +40,7 @@ def logError(file_name, line_number, message_string) -> None:
 def logWarning(file_name, line_number, message_string) -> None:
     log(file_name, line_number, 'warning', message_string)
 
-def logMissingStrings(warnings_dictionary, ignore_languages, is_warning=True) -> None:
+def logMissingStrings(warnings_dictionary, ignore_languages, is_error=False) -> None:
     keys = list(warnings_dictionary.keys())
     keys.sort(key=lambda string: string.line_number)
     for key in keys:
@@ -48,16 +48,16 @@ def logMissingStrings(warnings_dictionary, ignore_languages, is_warning=True) ->
         if len(locale_names):
             message = ', '.join(locale_names)
             message_string = 'String "%s" missing for: %s' %  (key.string, message)
-            if is_warning is True:
+            if is_error is False:
                 logWarning(key.base.strings_file, key.line_number, message_string)
             else:
                 logError(key.base.strings_file, key.line_number, message_string)
 
-def logUnusedStrings(unused_strings_list, is_warning=True) -> None:
+def logUnusedStrings(unused_strings_list, is_error=False) -> None:
     unused_strings_list.sort(key=lambda string: string.line_number)
     for unused_string in unused_strings_list:
         message = 'String "%s" is not used' % unused_string.string
-        if is_warning is True:
+        if is_error is False:
             logWarning(unused_string.base.strings_file, unused_string.line_number, message)
         else:
             logError(unused_string.base.strings_file, unused_string.line_number, message)

@@ -98,6 +98,12 @@ def main(argv=sys.argv[1:]):
         action='store_true'
     )
     parser.add_argument(
+        '--error',
+        help='Changes warnings to errors',
+        default=False,
+        action='store_true'
+    )
+    parser.add_argument(
         '--debug',
         help=argparse.SUPPRESS,
         default=False,
