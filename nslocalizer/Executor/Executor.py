@@ -69,12 +69,12 @@ class Executor(object):
             if arguments.find_missing:
                 missing_strings = cls.findMissingStrings(xcodeproj_file, desired_targets)
                 # log data to xcode console
-                Reporter.logMissingStrings(missing_strings, arguments.ignore)
+                Reporter.logMissingStrings(missing_strings, arguments.ignore, arguments.error)
 
             if arguments.find_unused:
                 unused_strings = cls.findUnusedStrings(xcodeproj_file, desired_targets)
                 # log data to xcode console
-                Reporter.logUnusedStrings(unused_strings)
+                Reporter.logUnusedStrings(unused_strings, arguments.error)
 
         else: # pragma: no cover
             missing_targets = [target for target in arguments.target if target not in desired_targets]
@@ -102,7 +102,7 @@ class Executor(object):
 
         for source_code_file in code_files:
             data = FileOperations.getData(source_code_file)
-            matches = re.findall(r"NSLocalizedString\(@?\"(.*?)\",", data)
+            matches = re.findall(r'NSLocalizedString\(@?\"(.*?)\",', data)
             Logger.write().debug('%s: %i results' % (os.path.basename(source_code_file), len(matches)))
             known_strings.update(matches)
         unused_strings = [lstring for lstring in base_language.strings if lstring.string not in known_strings]
