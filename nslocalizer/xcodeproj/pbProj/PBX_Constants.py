@@ -109,3 +109,5 @@ kPBX_CONTAINERITEMPROXY_containerPortal = 'containerPortal'
 kPBX_XCBUILDCONFIG_baseConfigurationReference = 'baseConfigurationReference'
 
 kPBX_XCCONFIGURATION_buildConfigurations = 'buildConfigurations'
+
+kPBX_XCVersionGroup_currentVersion = 'currentVersion'
