@@ -28,6 +28,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import os
 import sys
 from pbPlist import pbParser
 
@@ -36,14 +37,15 @@ class FileOperations(object):
     @classmethod
     def getData(cls, file_path) -> object:
         data = None
-        try:
-            encoding = pbParser.GetFileEncoding(file_path)
-            file_descriptor = pbParser.OpenFileWithEncoding(file_path, encoding)
-            data = file_descriptor.read()
-            file_descriptor.close()
-        except IOError as exception: # pragma: no cover
-            print('I/O error({0}): {1}'.format(exception.errno, exception.strerror))
-        except: # pragma: no cover
-            print('Unexpected error:'+str(sys.exc_info()[0]))
-            raise
+        if os.path.isfile(file_path) is True:
+            try:
+                encoding = pbParser.GetFileEncoding(file_path)
+                file_descriptor = pbParser.OpenFileWithEncoding(file_path, encoding)
+                data = file_descriptor.read()
+                file_descriptor.close()
+            except IOError as exception: # pragma: no cover
+                print('I/O error({0}): {1}'.format(exception.errno, exception.strerror))
+            except: # pragma: no cover
+                print('Unexpected error:'+str(sys.exc_info()[0]))
+                raise
         return data

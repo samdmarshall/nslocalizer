@@ -30,6 +30,7 @@
 
 import os
 import re
+import sys
 from ..Helpers.Logger               import Logger
 from ..Helpers.FileOperations       import FileOperations
 from ..Language                     import Language
@@ -102,6 +103,8 @@ class Executor(object):
 
         for source_code_file in code_files:
             data = FileOperations.getData(source_code_file)
+            if data is None:
+                continue
             matches = re.findall(r'NSLocalizedString\(@?\"(.*?)\",', data)
             Logger.write().debug('%s: %i results' % (os.path.basename(source_code_file), len(matches)))
             known_strings.update(matches)
@@ -121,7 +124,14 @@ class Executor(object):
 
         if cls.base_language is None and cls.additional_languages is None:
             cls.additional_languages = set([language for language in languages if language.code != 'Base'])
-            cls.base_language = languages.difference(cls.additional_languages).pop()
+            if len(cls.additional_languages) == len(languages):
+                Logger.write().info('Could not find a "Base" language, assuming "English"...')
+                cls.additional_languages = set([language for language in languages if language.code != 'en'])
+            if len(cls.additional_languages) == len(languages):
+                Logger.write().error('Unable to locate the "Base" language, please assign one in the project file!')
+                sys.exit(1)
+            other_languages = languages.difference(cls.additional_languages)
+            cls.base_language = other_languages.pop()
             cls.base_language.findStrings()
 
         return (cls.base_language, cls.additional_languages)

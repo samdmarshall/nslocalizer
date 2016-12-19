@@ -65,6 +65,7 @@ from . import PBXVariantGroup
 from . import PBXZipArchiveReference
 from . import XCBuildConfiguration
 from . import XCConfigurationList
+from . import XCVersionGroup
 
 PBX_TYPE_TABLE = {
     'PBXAggregateTarget': PBXAggregateTarget.PBXAggregateTarget,
@@ -102,6 +103,7 @@ PBX_TYPE_TABLE = {
     'PBXZipArchiveReference': PBXZipArchiveReference.PBXZipArchiveReference,
     'XCBuildConfiguration': XCBuildConfiguration.XCBuildConfiguration,
     'XCConfigurationList': XCConfigurationList.XCConfigurationList,
+    'XCVersionGroup': XCVersionGroup.XCVersionGroup,
 }
 
 def PBX_Type_Resolver(identifier, dictionary):
