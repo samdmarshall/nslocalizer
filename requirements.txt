@@ -6,5 +6,5 @@ pylint >= 1.6.1
 
 pyobjc-core >= 2.5.1
 pyobjc-framework-Cocoa >= 2.5.1
-pbPlist >= 1.0.3
+pbPlist >= 1.0.4
 langcodes >= 1.2.0
