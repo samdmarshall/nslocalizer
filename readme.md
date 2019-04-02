@@ -21,12 +21,10 @@ pyobjc-core | >= 2.5.1
 pyobjc-framework-Cocoa | >= 2.5.1
 langcodes | >= 1.2.0
 
-## Installation [![homebrew](https://img.shields.io/badge/homebrew-v1.0-brightgreen.svg)](https://github.com/samdmarshall/homebrew-formulae) [![homebrew](https://img.shields.io/badge/homebrew-HEAD-orange.svg)](https://github.com/samdmarshall/homebrew-formulae)
-Via [homebrew](http://brew.sh):
+## Installation
+Via pip and python 3
 
-	$ brew update
-	$ brew tap samdmarshall/formulae
-	$ brew install samdmarshall/formulae/nslocalizer
+	$ pip3 install nslocalizer
 
 To install the tool from the repo, clone from Github then run the `make build` command.
 
